@@ -13,8 +13,10 @@ After completing this task, evaluate if extractable knowledge emerged:
 - Workaround for unexpected behavior?
 - Project-specific pattern learned?
 - Error required debugging to resolve?
+- Missing capability, reusable limitation, or repeated manual workaround?
 
-If yes: Log to .learnings/ using the self-improvement skill format.
+If yes: Log/update .learnings/ using the self-improvement skill format.
+For feature requests: search first, form actionable requests, notify the user when formed/updated/resolved, and remind later only for formed/accepted/in_progress related requests.
 If high-value (recurring, broadly applicable): Consider skill extraction.
 </self-improvement-reminder>
 EOF

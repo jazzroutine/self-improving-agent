@@ -257,7 +257,7 @@ Examples: `LRN-20250115-001`, `ERR-20250115-A3F`, `FEAT-20250115-002`.
 
 When an issue is fixed:
 
-1. Change `**Status**: pending` to `**Status**: resolved`.
+1. Change `current status` to `**Status**: resolved`.
 2. Add a resolution block after metadata.
 
 ```markdown

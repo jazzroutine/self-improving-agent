@@ -1,6 +1,6 @@
 # self-improving-agent
 
-My version of the self-improvement skill for OpenClaw and other coding agents. It helps agents capture corrections, command failures, missing capabilities, and reusable lessons in `.learnings/` files so future sessions can improve instead of rediscovering the same problems. Invested quite so time in it to make it actually useful.
+My version of the self-improvement skill for OpenClaw and other coding agents. It helps agents capture corrections, command failures, missing capabilities, and reusable lessons in `.learnings/` files so future sessions can improve instead of rediscovering the same problems. Invested quite some time in it to make it actually useful.
 
 ## What This Repo Contains
 

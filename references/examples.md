@@ -215,35 +215,55 @@ Before treating a timeout as an isolated incident, check existing timeout patter
 ---
 ```
 
-## Feature Request
+## Feature Request: Formed
 
 ```markdown
 ## [FEAT-20250115-001] export_to_csv
 
 **Logged**: 2025-01-15T16:45:00Z
 **Priority**: medium
-**Status**: pending
+**Status**: formed
 **Area**: backend
 
 ### Requested Capability
-Export analysis results to CSV format
+Export analysis results to CSV format.
 
-### User Context
-User runs weekly reports and needs to share results with non-technical 
-stakeholders in Excel. Currently copies output manually.
+### User Need
+The user runs weekly reports and needs to share results with non-technical stakeholders in Excel without manually copying command output.
 
-### Complexity Estimate
-simple
+### Trigger Conditions
+A future task mentions weekly reporting, spreadsheet sharing, manual report copying, or alternate output formats for the analyze command.
+
+### Expected Behavior
+The analyze command can write CSV output with stable headers and values that open cleanly in spreadsheet tools.
+
+### Current Workaround
+The user copies analysis output manually and reformats it for Excel.
 
 ### Suggested Implementation
-Add `--output csv` flag to the analyze command. Use standard csv module.
-Could extend existing `--output json` pattern.
+Add an `--output csv` option to the analyze command and reuse the existing structured output path used by `--output json`.
+
+### User Communication
+I added FEAT-20250115-001 for CSV export because weekly report sharing currently requires manual copying. I will mention it when future work touches report output formats or spreadsheet workflows.
+
+### Reminder Rule
+Remind the user when work touches report exports, analyze command output, or repeated manual spreadsheet formatting.
 
 ### Metadata
 - Frequency: recurring
-- Related Features: analyze command, json output
+- Source: repeated_workaround
+- Related Errors:
+- Related Learnings:
+- Related Files: src/commands/analyze.ts
+- See Also:
 
 ---
+```
+
+## Feature Request: Reminder
+
+```text
+This touches existing request FEAT-20250115-001: CSV export for weekly report sharing. The current task is changing analyze command output, so it may be worth implementing now or deliberately keeping pending.
 ```
 
 ## Feature Request: Resolved
@@ -257,27 +277,41 @@ Could extend existing `--output json` pattern.
 **Area**: frontend
 
 ### Requested Capability
-Dark mode support for the dashboard
+Dark mode support for the dashboard.
 
-### User Context
-User works late hours and finds the bright interface straining.
-Several other users have mentioned this informally.
+### User Need
+The user works late hours and finds the bright interface straining. Several other users have mentioned this informally.
 
-### Complexity Estimate
-medium
+### Trigger Conditions
+A future task touches dashboard theme settings, accessibility, late-night use, or user display preferences.
+
+### Expected Behavior
+The dashboard respects system color preference and also allows a manual dark-mode toggle in user settings.
+
+### Current Workaround
+Users rely on browser extensions or lower display brightness.
 
 ### Suggested Implementation
-Use CSS variables for colors. Add toggle in user settings.
-Consider system preference detection.
+Use CSS variables for theme colors, add a toggle in user settings, and initialize from system preference.
+
+### User Communication
+I marked FEAT-20250110-002 resolved after dark mode shipped with system preference detection and a manual toggle.
+
+### Reminder Rule
+Do not proactively remind after resolution unless a related regression or follow-up request appears.
 
 ### Metadata
 - Frequency: recurring
-- Related Features: user settings, theme system
+- Source: user_request
+- Related Errors:
+- Related Learnings:
+- Related Files: src/styles/theme.css, src/settings/user-settings.ts
+- See Also:
 
 ### Resolution
 - **Resolved**: 2025-01-18T16:00:00Z
 - **Commit/PR**: #142
-- **Notes**: Implemented with system preference detection and manual toggle
+- **Notes**: Implemented with system preference detection and manual toggle.
 
 ---
 ```

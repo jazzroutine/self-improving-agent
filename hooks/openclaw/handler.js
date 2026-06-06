@@ -19,13 +19,22 @@ Before logging:
 - Do not log secrets, tokens, private keys, environment variables, or raw transcripts
 - Prefer short summaries or redacted excerpts over full command output
 - For errors, search existing entries by exact error text, tool/command name, affected integration, likely root cause, and `Pattern-Key` before creating a new entry
+- For feature requests, search existing entries by capability, problem area, affected tool, trigger condition, and related error/learning ID before creating a new request
 
 **Log when:**
 - User corrects you -> `.learnings/LEARNINGS.md`
 - Command/operation fails -> `.learnings/ERRORS.md`
 - User wants missing capability -> `.learnings/FEATURE_REQUESTS.md`
+- Reusable limitation or repeated workaround appears -> `.learnings/FEATURE_REQUESTS.md`
 - You discover your knowledge was wrong -> `.learnings/LEARNINGS.md`
 - You find a better approach -> `.learnings/LEARNINGS.md`
+
+**Feature request loop:**
+- Create/update a request only for explicit missing capability, reusable limitation, or repeated workaround
+- If vague, ask one short clarification question before forming it
+- Use statuses: `draft`, `formed`, `accepted`, `in_progress`, `resolved`, `declined`, `superseded`
+- Tell the user when a request becomes `formed`, `accepted`, materially updated, or resolved
+- Remind later only for `formed`, `accepted`, or `in_progress` requests when related tasks, errors, limitations, or workarounds appear
 
 **Promote only when pattern is proven:**
 - Behavioral patterns -> `SOUL.md` or equivalent behavior guidance
