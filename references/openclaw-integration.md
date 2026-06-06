@@ -125,33 +125,44 @@ Log learnings to `.learnings/` for continuous improvement.
 
 ## Learning Workflow
 
-### Capturing Learnings
+### Capture First
 
-1. **In-session**: Log to `.learnings/` as usual
-2. **Cross-session**: Promote to workspace files
+1. Log corrections, knowledge gaps, and better approaches to `.learnings/LEARNINGS.md`.
+2. Log command, tool, API, and operation failures to `.learnings/ERRORS.md`.
+3. Log missing capability requests to `.learnings/FEATURE_REQUESTS.md`.
+4. Before adding an error entry, search existing entries by exact error text, tool or command name, affected integration, likely root cause, and `Pattern-Key`. Update the canonical entry when the pattern already exists.
+5. Keep entries short, redacted, actionable, and free of secrets, tokens, raw transcripts, and unnecessary command output.
 
 ### Promotion Decision Tree
 
+```text
+Start with the captured `.learnings/` entry.
+
+Is this a one-off or unverified observation?
+├── Yes -> Keep it in `.learnings/` until there is more evidence.
+└── No -> Has the pattern repeated enough to become durable guidance?
+    ├── No -> Keep tracking recurrence fields in `.learnings/`.
+    └── Yes -> Choose the promotion target.
+
+Promotion target:
+├── Behavioral or style rule -> SOUL.md, equivalent behavior file, or engine-specific instruction file
+├── Tool, command, integration, or local environment gotcha -> TOOLS.md or equivalent tool guidance
+├── Agent workflow, delegation, review, or operating rule -> AGENTS.md or equivalent agent guidance
+└── Reusable triggered procedure with steps and verification -> extract a skill from assets/SKILL-TEMPLATE.md
 ```
-Is the learning project-specific?
-├── Yes → Keep in .learnings/
-└── No → Is it behavioral/style-related?
-    ├── Yes → Promote to SOUL.md
-    └── No → Is it tool-related?
-        ├── Yes → Promote to TOOLS.md
-        └── No → Promote to AGENTS.md (workflow)
-```
+
+Promotion should preserve universality where possible. Use OpenClaw-specific files for OpenClaw-specific behavior, but do not bake OpenClaw names into general skill logic.
 
 ### Promotion Format Examples
 
 **From learning:**
-> Git push to GitHub fails without auth configured - triggers desktop prompt
+> Git push to GitHub fails when authentication is not configured.
 
-**To TOOLS.md:**
+**To a durable tool guidance file:**
 ```markdown
 ## Git
-- Don't push without confirming auth is configured
-- Use `gh auth status` to check GitHub CLI auth
+- Before pushing, verify the intended branch, remote default branch, and authentication state.
+- Use the local engine's approved auth check before attempting network Git operations.
 ```
 
 ## Inter-Agent Communication
@@ -214,10 +225,10 @@ sessions_spawn(task="Research X and report back", label="research")
 
 | Trigger | Action |
 |---------|--------|
-| Tool call error | Log to TOOLS.md with tool name |
-| Session handoff confusion | Log to AGENTS.md with delegation pattern |
-| Model behavior surprise | Log to SOUL.md with expected vs actual |
-| Skill issue | Log to .learnings/ or report upstream |
+| Tool call error | Log or update `.learnings/ERRORS.md` first; promote repeated tool gotchas to `TOOLS.md` |
+| Session handoff confusion | Log or update `.learnings/LEARNINGS.md` first; promote repeated workflow rules to `AGENTS.md` |
+| Model behavior surprise | Log or update `.learnings/LEARNINGS.md` first; promote proven behavior rules to `SOUL.md` or equivalent behavior guidance |
+| Skill issue | Log to `.learnings/`; if it is a reusable triggered procedure, extract a skill with `assets/SKILL-TEMPLATE.md` or report upstream |
 
 ## Verification
 

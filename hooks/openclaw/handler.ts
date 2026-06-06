@@ -17,23 +17,25 @@ After completing tasks, evaluate whether any learnings should be captured.
 Only log if this repo or workspace is using the self-improvement skill.
 
 Before logging:
-- Create only missing \`.learnings/\` files; never overwrite existing content
+- Create only missing `.learnings/` files; never overwrite existing content
 - Do not log secrets, tokens, private keys, environment variables, or raw transcripts
 - Prefer short summaries or redacted excerpts over full command output
+- For errors, search existing entries by exact error text, tool/command name, affected integration, likely root cause, and `Pattern-Key` before creating a new entry
 
 **Log when:**
-- User corrects you → \`.learnings/LEARNINGS.md\`
-- Command/operation fails → \`.learnings/ERRORS.md\`
-- User wants missing capability → \`.learnings/FEATURE_REQUESTS.md\`
-- You discover your knowledge was wrong → \`.learnings/LEARNINGS.md\`
-- You find a better approach → \`.learnings/LEARNINGS.md\`
+- User corrects you -> `.learnings/LEARNINGS.md`
+- Command/operation fails -> `.learnings/ERRORS.md`
+- User wants missing capability -> `.learnings/FEATURE_REQUESTS.md`
+- You discover your knowledge was wrong -> `.learnings/LEARNINGS.md`
+- You find a better approach -> `.learnings/LEARNINGS.md`
 
-**Promote when pattern is proven:**
-- Behavioral patterns → \`SOUL.md\`
-- Workflow improvements → \`AGENTS.md\`
-- Tool gotchas → \`TOOLS.md\`
+**Promote only when pattern is proven:**
+- Behavioral patterns -> `SOUL.md` or equivalent behavior guidance
+- Workflow improvements -> `AGENTS.md` or equivalent agent guidance
+- Tool gotchas -> `TOOLS.md` or equivalent tool guidance
+- Reusable triggered procedures -> a skill created from `assets/SKILL-TEMPLATE.md`
 
-Keep entries simple: date, title, what happened, and what to do differently.`;
+Keep entries simple: date, title, what happened, what to do differently, and how to avoid repeating it.`;
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return !!value && typeof value === 'object';

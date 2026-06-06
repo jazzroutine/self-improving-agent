@@ -62,12 +62,12 @@ Use `pnpm install` for this project.
 ### Resolution
 - **Resolved**: 2025-01-15T14:30:00Z
 - **Commit/PR**: N/A - knowledge update
-- **Notes**: Added to CLAUDE.md for future reference
+- **Notes**: Added to durable agent guidance for this workspace
 
 ---
 ```
 
-## Learning: Promoted to CLAUDE.md
+## Learning: Promoted to Durable Guidance
 
 ```markdown
 ## [LRN-20250115-003] best_practice
@@ -75,7 +75,7 @@ Use `pnpm install` for this project.
 **Logged**: 2025-01-15T16:00:00Z
 **Priority**: high
 **Status**: promoted
-**Promoted**: CLAUDE.md
+**Promoted**: AGENTS.md
 **Area**: backend
 
 ### Summary
@@ -140,22 +140,32 @@ Add to agent workflow: after any API changes, run `pnpm run generate:api`.
 ### Summary
 Docker build fails on M1 Mac due to platform mismatch
 
-### Error
-```
+### Representative Errors
+```text
 error: failed to solve: python:3.11-slim: no match for platform linux/arm64
 ```
 
-### Context
+### Context Examples
 - Command: `docker build -t myapp .`
 - Dockerfile uses `FROM python:3.11-slim`
 - Running on Apple Silicon (M1/M2)
+
+### Lesson
+Image platform support can differ across host architectures. Check the base image platform support before assuming a Dockerfile is portable.
 
 ### Suggested Fix
 Add platform flag: `docker build --platform linux/amd64 -t myapp .`
 Or update Dockerfile: `FROM --platform=linux/amd64 python:3.11-slim`
 
+### Avoidance Rule
+When building Docker images on mixed-architecture hosts, verify base image platform support before changing Dockerfile logic.
+
 ### Metadata
+- Pattern-Key: docker.platform_mismatch
 - Reproducible: yes
+- First-Seen: 2025-01-15
+- Last-Seen: 2025-01-15
+- Recurrence-Count: 1
 - Related Files: Dockerfile
 
 ---
@@ -174,21 +184,31 @@ Or update Dockerfile: `FROM --platform=linux/amd64 python:3.11-slim`
 ### Summary
 Third-party payment API timeout during checkout
 
-### Error
-```
+### Representative Errors
+```text
 TimeoutError: Request to payments.example.com timed out after 30000ms
 ```
 
-### Context
-- Command: POST /api/checkout
+### Context Examples
+- Operation: POST /api/checkout
 - Timeout set to 30s
 - Occurs during peak hours (lunch, evening)
+
+### Lesson
+External service calls need failure handling that matches production traffic conditions, not only happy-path local testing.
 
 ### Suggested Fix
 Implement retry with exponential backoff. Consider circuit breaker pattern.
 
+### Avoidance Rule
+Before treating a timeout as an isolated incident, check existing timeout patterns and update the canonical recurring entry when the root cause matches.
+
 ### Metadata
+- Pattern-Key: api.payment_timeout
 - Reproducible: yes (during peak hours)
+- First-Seen: 2025-01-15
+- Last-Seen: 2025-01-20
+- Recurrence-Count: 3
 - Related Files: src/services/payment.ts
 - See Also: ERR-20250115-X1Y, ERR-20250118-Z3W
 

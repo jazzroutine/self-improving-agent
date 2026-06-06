@@ -232,12 +232,20 @@ Common promotion targets:
 | `SOUL.md` | Behavioral guidelines, communication style, principles |
 | `TOOLS.md` | Tool capabilities, usage patterns, integration gotchas |
 
+Promotion target decision:
+
+- Keep one-off corrections, narrow incidents, and unverified ideas in `.learnings/`.
+- Promote repeated operational rules to `TOOLS.md`, `AGENTS.md`, or another durable guidance file that future agents already read.
+- Promote reusable procedures with clear triggers, steps, and verification into a skill using `assets/SKILL-TEMPLATE.md`.
+
 Promotion workflow:
 
-1. Distill the learning into a concise rule or fact.
-2. Add it to the appropriate target file.
-3. Update the original learning status to `promoted`.
-4. Record the target path in the original entry.
+1. Distill the learning into a concise rule, fact, or reusable procedure.
+2. Choose the promotion target with the decision rule above.
+3. Search the target and existing skills for similar guidance before adding new content.
+4. Add the distilled content to the appropriate target.
+5. Update the original learning status to `promoted` or `promoted_to_skill`.
+6. Record the target path or `Skill-Path` in the original entry.
 
 ## Recurring Pattern Detection
 
@@ -290,20 +298,28 @@ During review:
 
 ## Skill Extraction
 
-A learning can become a reusable skill when it is recurring, verified, non-obvious, broadly applicable, or explicitly requested by the user.
+A learning can become a reusable skill when it is recurring, verified, non-obvious, broadly applicable, or explicitly requested by the user. Skill extraction must use `assets/SKILL-TEMPLATE.md` as the canonical template; do not invent a parallel scaffold in scripts or guidance.
 
 Extraction workflow:
 
-1. Identify a qualifying learning.
-2. Run `scripts/extract-skill.sh skill-name --dry-run` if available.
-3. Create or customize the extracted `SKILL.md`.
-4. Update the learning status to `promoted_to_skill` and add `Skill-Path`.
-5. Verify the new skill is self-contained in a fresh session.
+1. Identify a qualifying learning with clear trigger conditions and reusable steps.
+2. Search existing skills for the same trigger, workflow, or use case; update an existing skill instead of creating a duplicate.
+3. Run `scripts/extract-skill.sh skill-name --dry-run` to preview the scaffold from `assets/SKILL-TEMPLATE.md`.
+4. Create the skill with `scripts/extract-skill.sh skill-name`, then customize the generated `SKILL.md` while preserving the template sections unless a section is genuinely irrelevant.
+5. Update the learning status to `promoted_to_skill` and add `Skill-Path`.
+6. Verify the new skill is self-contained in a fresh session.
 
 Quality gates before extraction:
 
 - Solution is tested or otherwise verified.
-- Description is clear without the original conversation.
+- Description is clear without the original conversation and includes trigger conditions.
 - Code examples are self-contained.
 - No project-specific hardcoded values leak into a general skill.
 - Skill name follows lowercase hyphenated naming conventions.
+- No existing skill already covers the same trigger or reusable procedure.
+
+Verification after extraction:
+
+- Generated `SKILL.md` came from `assets/SKILL-TEMPLATE.md`.
+- Required sections from the chosen template are present.
+- The source learning ID and `Skill-Path` are recorded in the original learning entry.

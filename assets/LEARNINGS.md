@@ -14,12 +14,12 @@ Corrections, insights, and knowledge gaps captured during development.
 | `in_progress` | Actively being worked on |
 | `resolved` | Issue fixed or knowledge integrated |
 | `wont_fix` | Decided not to address (reason in Resolution) |
-| `promoted` | Elevated to CLAUDE.md, AGENTS.md, or copilot-instructions.md |
+| `promoted` | Elevated to durable agent guidance for the current engine or workspace, such as AGENTS.md, TOOLS.md, CLAUDE.md, copilot-instructions.md, or an engine-specific behavior file |
 | `promoted_to_skill` | Extracted as a reusable skill |
 
 ## Skill Extraction Fields
 
-When a learning is promoted to a skill, add these fields:
+When a learning is promoted to a reusable skill, add these fields:
 
 ```markdown
 **Status**: promoted_to_skill
