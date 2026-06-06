@@ -215,21 +215,27 @@ Before treating a timeout as an isolated incident, check existing timeout patter
 ---
 ```
 
-## Feature Request: Formed
+## Feature Request: Agent Formed
 
 ```markdown
 ## [FEAT-20250115-001] export_to_csv
 
 **Logged**: 2025-01-15T16:45:00Z
 **Priority**: medium
-**Status**: formed
+**Status**: agent_formed
 **Area**: backend
 
 ### Requested Capability
 Export analysis results to CSV format.
 
+### Observed Friction
+The user runs weekly reports and currently has to copy analysis output into a spreadsheet by hand.
+
 ### User Need
-The user runs weekly reports and needs to share results with non-technical stakeholders in Excel without manually copying command output.
+The user needs to share results with non-technical stakeholders in Excel without manually copying command output.
+
+### Expected Benefit
+CSV export would remove repetitive report formatting and make the analyze command useful in spreadsheet workflows.
 
 ### Trigger Conditions
 A future task mentions weekly reporting, spreadsheet sharing, manual report copying, or alternate output formats for the analyze command.
@@ -243,8 +249,11 @@ The user copies analysis output manually and reformats it for Excel.
 ### Suggested Implementation
 Add an `--output csv` option to the analyze command and reuse the existing structured output path used by `--output json`.
 
+### Approval Needed
+User approval is needed before implementing the CSV output path because this was an agent-spotted automation opportunity, not an explicit current task request.
+
 ### User Communication
-I added FEAT-20250115-001 for CSV export because weekly report sharing currently requires manual copying. I will mention it when future work touches report output formats or spreadsheet workflows.
+I added FEAT-20250115-001 as agent_formed because weekly report sharing currently requires manual copying. It is ready for your review; I will not implement it unless you accept it.
 
 ### Reminder Rule
 Remind the user when work touches report exports, analyze command output, or repeated manual spreadsheet formatting.
@@ -260,10 +269,64 @@ Remind the user when work touches report exports, analyze command output, or rep
 ---
 ```
 
+## Feature Request: User Formed
+
+```markdown
+## [FEAT-20250116-001] dashboard_dark_mode
+
+**Logged**: 2025-01-16T10:15:00Z
+**Priority**: medium
+**Status**: user_formed
+**Area**: frontend
+
+### Requested Capability
+Dark mode support for the dashboard.
+
+### Observed Friction
+The user said the bright dashboard is uncomfortable during late-night work.
+
+### User Need
+The user needs a lower-glare interface for evening sessions.
+
+### Expected Benefit
+The dashboard becomes more comfortable for late work and more accessible for users who prefer dark themes.
+
+### Trigger Conditions
+A future task touches dashboard theme settings, accessibility, late-night use, or user display preferences.
+
+### Expected Behavior
+The dashboard respects system color preference and also allows a manual dark-mode toggle in user settings.
+
+### Current Workaround
+Users rely on browser extensions or lower display brightness.
+
+### Suggested Implementation
+Use CSS variables for theme colors, add a toggle in user settings, and initialize from system preference.
+
+### Approval Needed
+The user requested the capability, but implementation timing still needs approval unless this is the active task.
+
+### User Communication
+I added FEAT-20250116-001 as user_formed for dashboard dark mode and will mention it when future work touches theme settings or accessibility.
+
+### Reminder Rule
+Remind the user when work touches dashboard themes, settings, or accessibility.
+
+### Metadata
+- Frequency: first_time
+- Source: user_request
+- Related Errors:
+- Related Learnings:
+- Related Files: src/styles/theme.css, src/settings/user-settings.ts
+- See Also:
+
+---
+```
+
 ## Feature Request: Reminder
 
 ```text
-This touches existing request FEAT-20250115-001: CSV export for weekly report sharing. The current task is changing analyze command output, so it may be worth implementing now or deliberately keeping pending.
+This touches existing request FEAT-20250115-001: CSV export for weekly report sharing. The current task is changing analyze command output, so it may be worth accepting for implementation now, rejecting, or deliberately keeping pending.
 ```
 
 ## Feature Request: Resolved
@@ -279,8 +342,14 @@ This touches existing request FEAT-20250115-001: CSV export for weekly report sh
 ### Requested Capability
 Dark mode support for the dashboard.
 
-### User Need
+### Observed Friction
 The user works late hours and finds the bright interface straining. Several other users have mentioned this informally.
+
+### User Need
+The user needs a lower-glare interface for evening sessions.
+
+### Expected Benefit
+The dashboard is more comfortable for late work and more accessible for users who prefer dark themes.
 
 ### Trigger Conditions
 A future task touches dashboard theme settings, accessibility, late-night use, or user display preferences.
@@ -293,6 +362,9 @@ Users rely on browser extensions or lower display brightness.
 
 ### Suggested Implementation
 Use CSS variables for theme colors, add a toggle in user settings, and initialize from system preference.
+
+### Approval Needed
+No further approval needed; the request has been implemented.
 
 ### User Communication
 I marked FEAT-20250110-002 resolved after dark mode shipped with system preference detection and a manual toggle.

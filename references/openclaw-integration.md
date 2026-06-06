@@ -129,23 +129,27 @@ Log learnings to `.learnings/` for continuous improvement.
 
 1. Log corrections, knowledge gaps, and better approaches to `.learnings/LEARNINGS.md`.
 2. Log command, tool, API, and operation failures to `.learnings/ERRORS.md`.
-3. Use `.learnings/FEATURE_REQUESTS.md` for missing capabilities only when the gap is explicit, reusable, or tied to repeated manual workaround.
+3. Use `.learnings/FEATURE_REQUESTS.md` for missing capabilities and agent-spotted skill opportunities only when the gap is explicit, reusable, tied to repeated manual workaround, or ready for user review.
 4. Before adding an error entry, search existing entries by exact error text, tool or command name, affected integration, likely root cause, and `Pattern-Key`. Update the canonical entry when the pattern already exists.
 5. Before adding a feature request, search existing entries by capability name, problem area, affected tool, trigger condition, and related error or learning ID. Update a matching request instead of duplicating it.
 6. Keep entries short, redacted, actionable, and free of secrets, tokens, raw transcripts, and unnecessary command output.
 
 ### Feature Request Loop
 
-Feature requests are user-visible backlog items, not silent notes. In OpenClaw, agents should use the same loop as the core skill:
+Feature requests are user-visible backlog items and the moderation gate for agent-grown capabilities. In OpenClaw, agents should use the same loop as the core skill:
 
-1. Detect a missing capability, reusable limitation, or repeated workaround.
+1. Detect a missing capability, reusable limitation, repeated workaround, or concrete agent-spotted skill/automation opportunity.
 2. Search `.learnings/FEATURE_REQUESTS.md` for a matching request.
 3. Ask one short clarification question if the request is too vague to make actionable.
-4. Form the request with requested capability, user need, trigger conditions, expected behavior, current workaround, suggested implementation, user communication, and reminder rule.
-5. Tell the user immediately when a request becomes `formed`, `accepted`, materially updated, or resolved.
-6. Remind the user later when a task, problem, error, or workaround matches a `formed`, `accepted`, or `in_progress` request's trigger conditions.
+4. Form the request with requested capability, observed friction, user need, expected benefit, trigger conditions, expected behavior, current workaround, suggested implementation, approval needed, user communication, and reminder rule.
+5. Use `user_formed` when the user clearly requested the capability and the request is ready.
+6. Use `agent_formed` when the agent noticed the opportunity and the request is ready enough for user review.
+7. Tell the user immediately when a request becomes `user_formed`, `agent_formed`, `accepted`, materially updated, `rejected`, or `resolved`.
+8. Remind the user later when a task, problem, error, or workaround matches a `user_formed`, `agent_formed`, `accepted`, or `in_progress` request's trigger conditions.
 
-Use these statuses for feature requests: `draft`, `formed`, `accepted`, `in_progress`, `resolved`, `declined`, and `superseded`. Drafts stay quiet unless clarification is needed or the user returns to the topic. Resolved, declined, and superseded requests should not trigger proactive reminders.
+Use these statuses for feature requests: `draft`, `user_formed`, `agent_formed`, `accepted`, `in_progress`, `resolved`, `rejected`, and `superseded`. Drafts stay quiet unless clarification is needed or the user returns to the topic. Resolved, rejected, and superseded requests should not trigger proactive reminders.
+
+If an agent spots a small skill or automation opportunity, it must create or update an `agent_formed` request first and wait for user acceptance before using `assets/SKILL-TEMPLATE.md` or `scripts/extract-skill.sh` to create the skill.
 
 ### Promotion Decision Tree
 
@@ -242,8 +246,8 @@ sessions_spawn(task="Research X and report back", label="research")
 | Tool call error | Log or update `.learnings/ERRORS.md` first; promote repeated tool gotchas to `TOOLS.md` |
 | Session handoff confusion | Log or update `.learnings/LEARNINGS.md` first; promote repeated workflow rules to `AGENTS.md` |
 | Model behavior surprise | Log or update `.learnings/LEARNINGS.md` first; promote proven behavior rules to `SOUL.md` or equivalent behavior guidance |
-| Missing capability | Search or update `.learnings/FEATURE_REQUESTS.md`; form actionable requests with status, trigger conditions, user communication, and reminder rule |
-| Related task/problem touches existing feature request | Remind the user only for `formed`, `accepted`, or `in_progress` requests, naming the request ID and relevance |
+| Missing capability or agent-spotted skill opportunity | Search or update `.learnings/FEATURE_REQUESTS.md`; form actionable `user_formed` or `agent_formed` requests with status, trigger conditions, approval needed, user communication, and reminder rule |
+| Related task/problem touches existing feature request | Remind the user only for `user_formed`, `agent_formed`, `accepted`, or `in_progress` requests, naming the request ID and relevance |
 | Skill issue | Log to `.learnings/`; if it is a reusable triggered procedure, extract a skill with `assets/SKILL-TEMPLATE.md` or report upstream |
 
 ## Verification

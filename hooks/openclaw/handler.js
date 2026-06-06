@@ -25,16 +25,18 @@ Before logging:
 - User corrects you -> `.learnings/LEARNINGS.md`
 - Command/operation fails -> `.learnings/ERRORS.md`
 - User wants missing capability -> `.learnings/FEATURE_REQUESTS.md`
-- Reusable limitation or repeated workaround appears -> `.learnings/FEATURE_REQUESTS.md`
+- Reusable limitation, repeated workaround, or agent-spotted skill opportunity appears -> `.learnings/FEATURE_REQUESTS.md`
 - You discover your knowledge was wrong -> `.learnings/LEARNINGS.md`
 - You find a better approach -> `.learnings/LEARNINGS.md`
 
 **Feature request loop:**
-- Create/update a request only for explicit missing capability, reusable limitation, or repeated workaround
+- Create/update a request only for explicit missing capability, reusable limitation, repeated workaround, or concrete agent-spotted skill opportunity
 - If vague, ask one short clarification question before forming it
-- Use statuses: `draft`, `formed`, `accepted`, `in_progress`, `resolved`, `declined`, `superseded`
-- Tell the user when a request becomes `formed`, `accepted`, materially updated, or resolved
-- Remind later only for `formed`, `accepted`, or `in_progress` requests when related tasks, errors, limitations, or workarounds appear
+- Use statuses: `draft`, `user_formed`, `agent_formed`, `accepted`, `in_progress`, `resolved`, `rejected`, `superseded`
+- `agent_formed` must include observed friction, proposed capability, expected benefit, and approval needed
+- Tell the user when a request becomes `user_formed`, `agent_formed`, `accepted`, materially updated, `rejected`, or `resolved`
+- Remind later only for `user_formed`, `agent_formed`, `accepted`, or `in_progress` requests when related tasks, errors, limitations, or workarounds appear
+- Do not create an agent-proposed skill until the matching feature request is accepted; then use `assets/SKILL-TEMPLATE.md` and `scripts/extract-skill.sh` if needed
 
 **Promote only when pattern is proven:**
 - Behavioral patterns -> `SOUL.md` or equivalent behavior guidance
