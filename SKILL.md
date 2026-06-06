@@ -27,7 +27,7 @@ Before logging, ensure the current project or workspace has a `.learnings/` dire
 mkdir -p .learnings
 [ -f .learnings/LEARNINGS.md ] || printf "# Learnings\n\nCorrections, insights, and knowledge gaps captured during development.\n\n**Categories**: correction | insight | knowledge_gap | best_practice\n\n---\n" > .learnings/LEARNINGS.md
 [ -f .learnings/ERRORS.md ] || printf "# Errors\n\nCommand failures and integration errors.\n\n---\n" > .learnings/ERRORS.md
-[ -f .learnings/FEATURE_REQUESTS.md ] || printf "# Feature Requests\n\nCapabilities requested by the user.\n\n---\n" > .learnings/FEATURE_REQUESTS.md
+[ -f .learnings/FEATURE_REQUESTS.md ] || printf "# Feature Requests\n\nMissing capabilities and user-requested improvements that should become part of a user-involved loop.\n\n---\n" > .learnings/FEATURE_REQUESTS.md
 ```
 
 ## Quick Reference
@@ -36,7 +36,7 @@ mkdir -p .learnings
 |-----------|--------|
 | Command or operation fails | Log to `.learnings/ERRORS.md` |
 | User corrects the agent | Log to `.learnings/LEARNINGS.md` with category `correction` |
-| User requests a missing capability | Log to `.learnings/FEATURE_REQUESTS.md` |
+| User requests a missing capability | Run the feature request workflow; notify the user once the request is `formed` |
 | API or external tool fails | Log to `.learnings/ERRORS.md` with integration details |
 | Knowledge was outdated or wrong | Log to `.learnings/LEARNINGS.md` with category `knowledge_gap` |
 | Better recurring approach is found | Log to `.learnings/LEARNINGS.md` with category `best_practice` |
@@ -53,11 +53,51 @@ Log a learning when the user says or implies:
 - "You're wrong about..."
 - "That's outdated..."
 
-Log a feature request when the user asks for a capability the agent or toolchain does not currently have.
+Run the feature request workflow when the user asks for a capability the agent or toolchain does not currently have, when a missing reusable capability blocks or weakens the task, or when a repeated manual workaround shows that automation would help.
 
 Log a knowledge gap when documentation, behavior, or user-provided information contradicts what the agent expected.
 
 Log an error when a command returns a non-zero exit code, an exception appears, a tool times out, or output is unexpectedly unusable.
+
+## Feature Request Workflow
+
+Use `.learnings/FEATURE_REQUESTS.md` as a lightweight backlog for missing capabilities that deserve user visibility. Feature requests are part of a user-involved loop, not silent notes.
+
+Create or update a feature request only when one of these is true:
+
+1. The user explicitly asks for a capability that does not exist yet.
+2. The agent hits a limitation that blocks or meaningfully weakens the task, and the missing capability would be reusable.
+3. A repeated manual workaround shows that automation or better tooling would save future effort.
+
+Do not log ordinary bugs, vague preferences, one-off wishes, or tasks already being implemented in the current change.
+
+Before adding anything to `.learnings/FEATURE_REQUESTS.md`:
+
+1. Search existing feature requests by capability name, problem area, affected tool, trigger condition, and related error or learning ID.
+2. If a matching request exists, update it instead of creating a duplicate. Add context, recurrence, related entries, or a stronger reminder rule as needed.
+3. If the request is too vague to make actionable, ask one short clarification question before writing a formed request.
+4. If the need is real but still unclear, create or keep the entry as `draft` and do not proactively remind the user about it.
+5. Once the entry is complete enough to be actionable, set `**Status**: formed` or stronger.
+6. Tell the user immediately when a request becomes `formed`, `accepted`, materially updated, or resolved.
+
+A formed request must include requested capability, user need, trigger conditions, expected behavior, current workaround, suggested implementation, user communication, and reminder rule.
+
+Reminder behavior:
+
+- Only `formed`, `accepted`, and `in_progress` feature requests trigger proactive reminders.
+- Remind the user when a later task, error, workaround, or limitation matches the request's trigger conditions.
+- Keep reminders brief and actionable: name the feature request ID, summarize why it is relevant, and ask or recommend whether to implement, defer, or keep pending.
+- Do not remind about `draft`, `resolved`, `declined`, or `superseded` requests unless the user asks about them directly.
+
+User communication examples:
+
+```text
+I added FEAT-YYYYMMDD-001 to .learnings/FEATURE_REQUESTS.md for automatic related-request reminders. I will mention it when future tasks touch feature-request logging, reminders, or repeated workaround detection.
+```
+
+```text
+This touches existing request FEAT-YYYYMMDD-001: automatic related-request reminders. It may be worth implementing now or keeping it pending.
+```
 
 ## Error Deduplication Workflow
 
@@ -156,31 +196,47 @@ Concrete prevention rule future agents should follow.
 
 ## Feature Request Entry Format
 
-Append to `.learnings/FEATURE_REQUESTS.md`:
+Append to `.learnings/FEATURE_REQUESTS.md` only after the feature request workflow says the capability gap is worth capturing:
 
 ```markdown
 ## [FEAT-YYYYMMDD-XXX] capability_name
 
 **Logged**: ISO-8601 timestamp
-**Priority**: medium
-**Status**: pending
-**Area**: frontend | backend | infra | tests | docs | config
+**Priority**: low | medium | high | critical
+**Status**: draft | formed | accepted | in_progress | resolved | declined | superseded
+**Area**: frontend | backend | infra | tests | docs | config | agent-workflow | toolchain
 
 ### Requested Capability
-What the user wanted to do
+What should exist.
 
-### User Context
-Why they needed it, what problem they're solving
+### User Need
+Why the user needs it and what outcome it would improve.
 
-### Complexity Estimate
-simple | medium | complex
+### Trigger Conditions
+When future agents should recognize that this request is relevant again.
+
+### Expected Behavior
+What the capability should do when implemented.
+
+### Current Workaround
+What the agent or user has to do manually right now.
 
 ### Suggested Implementation
-How this could be built, what it might extend
+Concrete implementation direction, likely files, tools, hooks, or workflow changes.
+
+### User Communication
+What the agent told the user when this request became formed, accepted, updated, or resolved.
+
+### Reminder Rule
+When future agents should remind the user about this request.
 
 ### Metadata
 - Frequency: first_time | recurring
-- Related Features: existing_feature_name
+- Source: user_request | agent_limitation | repeated_workaround
+- Related Errors:
+- Related Learnings:
+- Related Files:
+- See Also:
 
 ---
 ```
@@ -213,9 +269,13 @@ When an issue is fixed:
 
 Other status values:
 
-- `in_progress` - Actively being worked on
-- `wont_fix` - Decided not to address; include a reason in resolution notes
-- `promoted` - Elevated to durable agent guidance
+- `draft` - Feature request needs more user context before it is actionable.
+- `formed` - Feature request is complete enough to notify the user and trigger future reminders.
+- `accepted` - User has agreed the feature should be implemented eventually.
+- `in_progress` - Actively being worked on.
+- `declined` or `wont_fix` - Decided not to address; include a reason in resolution notes.
+- `superseded` - Replaced by another entry; link the replacement.
+- `promoted` - Elevated to durable agent guidance.
 - `promoted_to_skill` - Extracted into a reusable skill
 
 ## Promotion Guidance
