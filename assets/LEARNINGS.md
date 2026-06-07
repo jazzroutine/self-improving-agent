@@ -4,7 +4,7 @@ Corrections, insights, and knowledge gaps captured during development.
 
 **Categories**: correction | insight | knowledge_gap | best_practice
 **Areas**: frontend | backend | infra | tests | docs | config
-**Statuses**: pending | in_progress | resolved | wont_fix | promoted | promoted_to_skill
+**Statuses**: pending | in_progress | resolved | wont_fix | promoted
 
 ## Status Definitions
 
@@ -14,15 +14,14 @@ Corrections, insights, and knowledge gaps captured during development.
 | `in_progress` | Actively being worked on |
 | `resolved` | Issue fixed or knowledge integrated |
 | `wont_fix` | Decided not to address (reason in Resolution) |
-| `promoted` | Elevated to durable agent guidance for the current engine or workspace, such as AGENTS.md, TOOLS.md, CLAUDE.md, copilot-instructions.md, or an engine-specific behavior file |
-| `promoted_to_skill` | Extracted as a reusable skill |
+| `promoted` | Elevated to durable guidance or extracted as a reusable skill; record the destination in notes or metadata |
 
 ## Skill Extraction Fields
 
-When a learning is promoted to a reusable skill, add these fields:
+When a learning is promoted to durable guidance or a reusable skill, add destination details:
 
 ```markdown
-**Status**: promoted_to_skill
+**Status**: promoted
 **Skill-Path**: skills/skill-name
 ```
 
@@ -32,7 +31,7 @@ Example:
 
 **Logged**: 2025-01-15T10:00:00Z
 **Priority**: high
-**Status**: promoted_to_skill
+**Status**: promoted
 **Skill-Path**: skills/docker-m1-fixes
 **Area**: infra
 

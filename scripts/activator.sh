@@ -16,7 +16,7 @@ After completing this task, evaluate if extractable knowledge emerged:
 - Missing capability, reusable limitation, repeated manual workaround, or agent-spotted skill opportunity?
 
 If yes: Log/update .learnings/ using the self-improvement skill format.
-For feature requests: search first, use user_formed for user requests and agent_formed for agent-spotted opportunities, include observed friction/benefit/approval needed, notify the user when user_formed/agent_formed/accepted/updated/rejected/resolved, and remind later only for user_formed/agent_formed/accepted/in_progress related requests.
-For agent-spotted skill ideas: create/update FEATURE_REQUESTS.md first; only extract a skill from assets/SKILL-TEMPLATE.md after user acceptance.
+For feature requests: search first, use user_formed for user requests and agent_formed for agent-spotted opportunities, include observed friction/benefit/approval needed, notify the user when user_formed/agent_formed/in_progress/updated/rejected/resolved, and remind later only for user_formed/agent_formed/in_progress related requests.
+For agent-spotted skill ideas: create/update FEATURE_REQUESTS.md first; only extract a skill from assets/SKILL-TEMPLATE.md after user approval.
 </self-improvement-reminder>
 EOF

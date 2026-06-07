@@ -144,12 +144,12 @@ Feature requests are user-visible backlog items and the moderation gate for agen
 4. Form the request with requested capability, observed friction, user need, expected benefit, trigger conditions, expected behavior, current workaround, suggested implementation, approval needed, user communication, and reminder rule.
 5. Use `user_formed` when the user clearly requested the capability and the request is ready.
 6. Use `agent_formed` when the agent noticed the opportunity and the request is ready enough for user review.
-7. Tell the user immediately when a request becomes `user_formed`, `agent_formed`, `accepted`, materially updated, `rejected`, or `resolved`.
-8. Remind the user later when a task, problem, error, or workaround matches a `user_formed`, `agent_formed`, `accepted`, or `in_progress` request's trigger conditions.
+7. Tell the user immediately when a request becomes `user_formed`, `agent_formed`, `in_progress`, materially updated, `rejected`, or `resolved`.
+8. Remind the user later when a task, problem, error, or workaround matches a `user_formed`, `agent_formed`, or `in_progress` request's trigger conditions.
 
-Use these statuses for feature requests: `draft`, `user_formed`, `agent_formed`, `accepted`, `in_progress`, `resolved`, `rejected`, and `superseded`. Drafts stay quiet unless clarification is needed or the user returns to the topic. Resolved, rejected, and superseded requests should not trigger proactive reminders.
+Use these statuses for feature requests: `draft`, `user_formed`, `agent_formed`, `in_progress`, `resolved`, `rejected`, and `superseded`. Drafts stay quiet unless clarification is needed or the user returns to the topic. Resolved, rejected, and superseded requests should not trigger proactive reminders.
 
-If an agent spots a small skill or automation opportunity, it must create or update an `agent_formed` request first and wait for user acceptance before using `assets/SKILL-TEMPLATE.md` or `scripts/extract-skill.sh` to create the skill.
+If an agent spots a small skill or automation opportunity, it must create or update an `agent_formed` request first and wait for user approval before using `assets/SKILL-TEMPLATE.md` or `scripts/extract-skill.sh` to create the skill.
 
 ### Promotion Decision Tree
 
@@ -247,7 +247,7 @@ sessions_spawn(task="Research X and report back", label="research")
 | Session handoff confusion | Log or update `.learnings/LEARNINGS.md` first; promote repeated workflow rules to `AGENTS.md` |
 | Model behavior surprise | Log or update `.learnings/LEARNINGS.md` first; promote proven behavior rules to `SOUL.md` or equivalent behavior guidance |
 | Missing capability or agent-spotted skill opportunity | Search or update `.learnings/FEATURE_REQUESTS.md`; form actionable `user_formed` or `agent_formed` requests with status, trigger conditions, approval needed, user communication, and reminder rule |
-| Related task/problem touches existing feature request | Remind the user only for `user_formed`, `agent_formed`, `accepted`, or `in_progress` requests, naming the request ID and relevance |
+| Related task/problem touches existing feature request | Remind the user only for `user_formed`, `agent_formed`, or `in_progress` requests, naming the request ID and relevance |
 | Skill issue | Log to `.learnings/`; if it is a reusable triggered procedure, extract a skill with `assets/SKILL-TEMPLATE.md` or report upstream |
 
 ## Verification

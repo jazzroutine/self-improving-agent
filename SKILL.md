@@ -81,7 +81,7 @@ Before adding anything to `.learnings/FEATURE_REQUESTS.md`:
 4. If the need is real but still unclear, create or keep the entry as `draft` and do not proactively remind the user about it.
 5. Use `user_formed` when the user clearly requested the capability and the request is ready.
 6. Use `agent_formed` when the agent noticed the opportunity and the request is ready enough for user review.
-7. Tell the user immediately when a request becomes `user_formed`, `agent_formed`, `accepted`, materially updated, `rejected`, or `resolved`.
+7. Tell the user immediately when a request becomes `user_formed`, `agent_formed`, `in_progress`, materially updated, `rejected`, or `resolved`.
 
 A `user_formed` request must include requested capability, user need, trigger conditions, expected behavior, current workaround, suggested implementation, user communication, and reminder rule.
 
@@ -91,25 +91,25 @@ Approval and skill-creation behavior:
 
 - `FEATURE_REQUESTS.md` is the pre-moderation gate for agent-grown capabilities.
 - If the agent spots an opportunity to grow, it first creates or updates an `agent_formed` request and tells the user about it.
-- The agent must not create a new skill from an agent-spotted opportunity until the user accepts the request.
-- After user approval, change the request to `accepted`, then use `assets/SKILL-TEMPLATE.md` and `scripts/extract-skill.sh` when skill extraction is the right implementation path.
+- The agent must not create a new skill from an agent-spotted opportunity until the user approves the request.
+- After user approval, change the request to `in_progress`, then use `assets/SKILL-TEMPLATE.md` and `scripts/extract-skill.sh` when skill extraction is the right implementation path.
 - When the skill or capability ships, change the current status to `resolved` and record the resolution.
 
 Reminder behavior:
 
-- Only `user_formed`, `agent_formed`, `accepted`, and `in_progress` feature requests trigger proactive reminders.
+- Only `user_formed`, `agent_formed`, and `in_progress` feature requests trigger proactive reminders.
 - Remind the user when a later task, error, workaround, or limitation matches the request's trigger conditions.
-- Keep reminders brief and actionable: name the feature request ID, summarize why it is relevant, and ask or recommend whether to implement, accept, reject, defer, or keep pending.
+- Keep reminders brief and actionable: name the feature request ID, summarize why it is relevant, and ask or recommend whether to implement, reject, defer, or keep pending.
 - Do not remind about `draft`, `resolved`, `rejected`, or `superseded` requests unless the user asks about them directly.
 
 User communication examples:
 
 ```text
-I added FEAT-YYYYMMDD-001 to .learnings/FEATURE_REQUESTS.md as agent_formed because this recurring workaround looks like a reusable automation opportunity. It is ready for your review; I will not create a skill or tool for it unless you accept it.
+I added FEAT-YYYYMMDD-001 to .learnings/FEATURE_REQUESTS.md as agent_formed because this recurring workaround looks like a reusable automation opportunity. It is ready for your review; I will not create a skill or tool for it unless you approve it.
 ```
 
 ```text
-This touches existing request FEAT-YYYYMMDD-001: automatic related-request reminders. It may be worth accepting for implementation now, rejecting, or keeping pending.
+This touches existing request FEAT-YYYYMMDD-001: automatic related-request reminders. It may be worth approving for implementation now, rejecting, or keeping pending.
 ```
 
 ## Error Deduplication Workflow
@@ -216,7 +216,7 @@ Append to `.learnings/FEATURE_REQUESTS.md` only after the feature request workfl
 
 **Logged**: ISO-8601 timestamp
 **Priority**: low | medium | high | critical
-**Status**: draft | user_formed | agent_formed | accepted | in_progress | resolved | rejected | superseded
+**Status**: draft | user_formed | agent_formed | in_progress | resolved | rejected | superseded
 **Area**: frontend | backend | infra | tests | docs | config | agent-workflow | toolchain
 
 ### Requested Capability
@@ -229,7 +229,7 @@ For agent_formed requests, the concrete limitation, repeated workaround, or oppo
 Why the user needs it and what outcome it would improve.
 
 ### Expected Benefit
-What improves if this request is accepted and implemented.
+What improves if this request is approved and implemented.
 
 ### Trigger Conditions
 When future agents should recognize that this request is relevant again.
@@ -247,7 +247,7 @@ Concrete implementation direction, likely files, tools, hooks, or workflow chang
 For agent_formed requests, what user approval is required before implementation or skill creation. For user_formed requests, note whether the request is already approved for immediate work or only captured for later.
 
 ### User Communication
-What the agent told the user when this request became user_formed, agent_formed, accepted, updated, rejected, or resolved.
+What the agent told the user when this request became user_formed, agent_formed, updated, rejected, or resolved.
 
 ### Reminder Rule
 When future agents should remind the user about this request.
@@ -289,17 +289,17 @@ When an issue is fixed:
 - **Notes**: Brief description of what was done
 ```
 
-Other status values:
+Feature request status values:
 
 - `draft` - Feature request needs more context before it is actionable.
 - `user_formed` - User clearly requested the capability and the request is ready.
 - `agent_formed` - Agent noticed a useful opportunity and formed a request that is ready for user review.
-- `accepted` - User has agreed the feature should be implemented eventually.
-- `in_progress` - Actively being worked on.
-- `rejected` or `wont_fix` - Decided not to address; include a reason in resolution notes.
+- `in_progress` - Approved work is actively being implemented.
+- `resolved` - Implemented or otherwise satisfied; record skill paths, files, commits, or promotion details in the resolution notes.
+- `rejected` - Decided not to address; include a reason in resolution notes.
 - `superseded` - Replaced by another entry; link the replacement.
-- `promoted` - Elevated to durable agent guidance.
-- `promoted_to_skill` - Extracted into a reusable skill
+
+Learning and error entries may also use `promoted` when a lesson has been moved into durable guidance or extracted into a skill. Record the destination in notes or metadata instead of using a separate skill-specific status.
 
 ## Promotion Guidance
 
@@ -327,7 +327,7 @@ Promotion workflow:
 2. Choose the promotion target with the decision rule above.
 3. Search the target and existing skills for similar guidance before adding new content.
 4. Add the distilled content to the appropriate target.
-5. Update the original learning status to `promoted` or `promoted_to_skill`.
+5. Update the original learning status to `promoted`.
 6. Record the target path or `Skill-Path` in the original entry.
 
 ## Recurring Pattern Detection
@@ -389,16 +389,16 @@ If the agent spots an opportunity to grow from a recurring limitation, missing w
 
 1. Search `.learnings/FEATURE_REQUESTS.md` and existing skills for the same trigger, workflow, or use case.
 2. Create or update an `agent_formed` feature request that includes observed friction, proposed capability, expected benefit, approval needed, trigger conditions, expected behavior, current workaround, suggested implementation, user communication, and reminder rule.
-3. Tell the user the request is ready for review and that no skill will be created unless they accept it.
-4. If the user accepts it, change the request status to `accepted`.
+3. Tell the user the request is ready for review and that no skill will be created unless they approve it.
+4. If the user approves it, change the request status to `in_progress`.
 5. Run `scripts/extract-skill.sh skill-name --dry-run` to preview the scaffold from `assets/SKILL-TEMPLATE.md` when a reusable skill is the right implementation path.
 6. Create the skill with `scripts/extract-skill.sh skill-name`, then customize the generated `SKILL.md` while preserving the template sections unless a section is genuinely irrelevant.
-7. Update the accepted request to `resolved` when the skill or capability is implemented, and record `Skill-Path` or the implemented files in the resolution.
+7. Update the request to `resolved` when the skill or capability is implemented, and record `Skill-Path` or the implemented files in the resolution.
 8. Verify the new skill is self-contained in a fresh session.
 
 Quality gates before extraction:
 
-- User has accepted the feature request unless the user explicitly asked for immediate skill creation.
+- User has approved the feature request unless the user explicitly asked for immediate skill creation.
 - The request is actionable and has clear trigger conditions.
 - Solution is tested or otherwise verified.
 - Description is clear without the original conversation and includes trigger conditions.

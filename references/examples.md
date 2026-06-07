@@ -253,7 +253,7 @@ Add an `--output csv` option to the analyze command and reuse the existing struc
 User approval is needed before implementing the CSV output path because this was an agent-spotted automation opportunity, not an explicit current task request.
 
 ### User Communication
-I added FEAT-20250115-001 as agent_formed because weekly report sharing currently requires manual copying. It is ready for your review; I will not implement it unless you accept it.
+I added FEAT-20250115-001 as agent_formed because weekly report sharing currently requires manual copying. It is ready for your review; I will not implement it unless you approve it.
 
 ### Reminder Rule
 Remind the user when work touches report exports, analyze command output, or repeated manual spreadsheet formatting.
@@ -326,7 +326,7 @@ Remind the user when work touches dashboard themes, settings, or accessibility.
 ## Feature Request: Reminder
 
 ```text
-This touches existing request FEAT-20250115-001: CSV export for weekly report sharing. The current task is changing analyze command output, so it may be worth accepting for implementation now, rejecting, or deliberately keeping pending.
+This touches existing request FEAT-20250115-001: CSV export for weekly report sharing. The current task is changing analyze command output, so it may be worth approving for implementation now, rejecting, or deliberately keeping pending.
 ```
 
 ## Feature Request: Resolved
@@ -395,7 +395,7 @@ Do not proactively remind after resolution unless a related regression or follow
 
 **Logged**: 2025-01-18T11:00:00Z
 **Priority**: high
-**Status**: promoted_to_skill
+**Status**: promoted
 **Skill-Path**: skills/docker-m1-fixes
 **Area**: infra
 

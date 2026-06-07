@@ -7,11 +7,11 @@ With many thanks to the adaptation creator: https://github.com/peterskoett/self-
 ## What This Repo Contains
 
 - `SKILL.md` - agent-facing instructions loaded by compatible agent runtimes
-- `assets/` - starter templates for learning, error, feature request, and extracted skill files, including the canonical `SKILL-TEMPLATE.md` used for skill extraction
+- `assets/` - starter templates for learning, error, feature request, and extracted skill files, including the canonical `SKILL-TEMPLATE.md` used for skill creation and extraction
 - `hooks/openclaw/` - optional OpenClaw hook implementation
 - `scripts/activator.sh` - reminder hook script
 - `scripts/error-detector.sh` - optional command-error detection hook script
-- `scripts/extract-skill.sh` - helper for turning accepted feature requests or proven learnings into reusable skills from the canonical template variants
+- `scripts/extract-skill.sh` - helper for turning approved feature requests or proven learnings into reusable skills from the canonical template variants
 - `references/` - extended setup notes and examples
 
 ## Attribution
@@ -21,18 +21,13 @@ Remade for OpenClaw from the original self-improvement skill work:
 - https://github.com/pskoett/pskoett-ai-skills
 - https://github.com/pskoett/pskoett-ai-skills/tree/main/skills/self-improvement
 
-## OpenClaw Installation
 
-Install through ClawdHub when available:
+## Installation
 
-```bash
-clawdhub install self-improving-agent
-```
-
-Or install manually:
+Manual installation:
 
 ```bash
-git clone https://github.com/peterskoett/self-improving-agent.git ~/.openclaw/skills/self-improving-agent
+git clone https://github.com/jazzroutine/self-improving-agent.git ~/.openclaw/skills/self-improving-agent
 ```
 
 After installation, restart or reload your OpenClaw agent session so the skill registry can discover `SKILL.md`.
@@ -155,76 +150,51 @@ See `references/hooks-setup.md` for detailed hook configuration and troubleshoot
 
 ## Core Workflow
 
-The skill logic is capture-first, then dedupe, then promote only when the evidence justifies it. `.learnings/` should stay useful as a compact working index, not become a transcript archive.
+This skill gives agents a small memory system for improving their future work. It records useful experience in `.learnings/` files, avoids duplicate notes, and can create a dedicated skill when an issue becomes useful beyond a single incident.
 
-1. Capture corrections, knowledge gaps, better approaches, missing capabilities, and command/tool/API failures in the appropriate `.learnings/` file.
-2. Before adding a new entry, search existing learnings, feature requests, and especially error entries for matching headings, exact error text, command names, affected integrations, likely root causes, `Pattern-Key`, and active rules.
-3. If the same error pattern already exists, update the canonical entry instead of adding a duplicate. Update recurrence fields, representative errors, context examples, lesson, suggested fix, and avoidance rule as needed.
-4. For feature requests, update an existing matching request when possible; otherwise create a request only when the missing capability is explicit, reusable, tied to a repeated workaround, or a concrete agent-spotted skill or automation opportunity.
-5. Keep entries short, redacted, actionable, and free of secrets, tokens, raw transcripts, environment variables, and unnecessary command output.
-6. Add `See Also` links when entries are related but have different root causes.
-7. Promote broadly applicable or repeated patterns into durable agent guidance only after they are proven enough to help future agents.
+1. When a user corrects the agent, a command fails, a capability is missing, or a useful recurring pattern appears, the agent checks whether the event is worth recording.
+2. The agent searches the existing `.learnings/` files before writing, so repeated issues update the same entry instead of creating scattered duplicates.
+3. Corrections, knowledge gaps, and reusable working habits go in `.learnings/LEARNINGS.md`.
+4. Command, tool, API, and integration failures go in `.learnings/ERRORS.md`, grouped by root cause when possible.
+5. Missing capabilities, repeated workaround ideas, and agent-spotted automation or skill opportunities go in `.learnings/FEATURE_REQUESTS.md`.
+6. Entries stay short and useful: what happened, what to do differently, and any safe context needed later. They should not include secrets, raw transcripts, tokens, environment variables, or long command output.
+7. If the same issue becomes a general rule, the agent can copy that rule into the instruction file future agents actually load, such as `AGENTS.md`, `TOOLS.md`, `SOUL.md` for OpenClaw, or a new issue-specific skill. The original `.learnings/` entry remains as the source note, so the reason for the rule is still traceable.
 
 ## Entry Types
 
-Use `SKILL.md` as the source of truth for exact formats. In summary:
+`SKILL.md` is the source of the main logic. In summary:
 
 | File | Use For | Key Rule |
 |------|---------|----------|
-| `.learnings/LEARNINGS.md` | Corrections, knowledge gaps, insights, and recurring best practices | Search for near-duplicates before adding. |
-| `.learnings/ERRORS.md` | Command, tool, API, integration, and operation failures | Dedupe first; maintain one canonical entry per recurring root cause. |
-| `.learnings/FEATURE_REQUESTS.md` | Missing capabilities, reusable limitations, repeated workaround automation ideas, and agent-spotted skill opportunities | Treat requests as a user-involved loop and moderation gate: form the need, notify when actionable, require acceptance before agent-created skills, and remind when related work appears. |
+| `.learnings/LEARNINGS.md` | Corrections, knowledge gaps, insights, and recurring best practices | Will search for near-duplicates before adding. |
+| `.learnings/ERRORS.md` | Command, tool, API, integration, and operation failures | Will search for near-duplicates before adding and maintain one entry per recurring root cause. |
+| `.learnings/FEATURE_REQUESTS.md` | Missing capabilities, reusable limitations, repeated workaround automation ideas, and agent-spotted skill opportunities | Will treat requests as a user-involved loop and moderation gate: form the need, notify when actionable, require user approval before agent-created skill creation, and remind when related issue or opportunity appears again. |
 
-Error entries should use the current canonical shape: `Representative Errors`, `Context Examples`, `Lesson`, `Suggested Fix`, `Avoidance Rule`, and recurrence metadata such as `Pattern-Key`, `First-Seen`, `Last-Seen`, and `Recurrence-Count`.
+Error entries use the shape: `Representative Errors`, `Context Examples`, `Lesson`, `Issue`, `Suggested Fix`, `Avoidance Rule`, and recurrence metadata such as `Pattern-Key`, `First-Seen`, `Last-Seen`, and `Recurrence-Count`.
 
-## Feature Request Loop
+## Skill-Creation and Promotion Logic
 
-Feature requests are useful only when they are actionable and visible. Use `.learnings/FEATURE_REQUESTS.md` for capability gaps and future skill ideas that should be revisited, not for ordinary bugs, vague preferences, or work already being done.
+The skill separates small local notes from durable guidance. `.learnings/` keeps the source record: corrections, errors, feature requests, and short lessons. When a lesson becomes generally useful, the agent can move the distilled rule into the instruction file future agents already load, such as `AGENTS.md`, `TOOLS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `SOUL.md`, or another engine-specific guidance file.
 
-Create or update a request when the user asks for a missing capability, the agent hits a reusable limitation that weakens the task, a repeated manual workaround shows automation would help, or the agent notices a concrete opportunity for a small reusable skill, workflow, hook, template, or automation. Search existing requests first by capability, affected tool, problem area, trigger condition, and related error or learning ID.
+Use the target that matches the behavior: agent workflow belongs in agent guidance, local command and integration gotchas belong in tool guidance, communication rules belong in behavior guidance, and project conventions belong in the project instruction file. The `.learnings/` entry remains as the traceable source note and should record the promoted target.
 
-Use source-aware statuses:
+New reusable skills follow the feature-request loop. The agent uses `.learnings/FEATURE_REQUESTS.md` when a missing capability, recurring limitation, repeated workaround, or concrete agent-spotted opportunity deserves future attention. Before adding a request, it searches existing requests by capability, affected tool, problem area, trigger condition, and related error or learning ID, then updates a matching request instead of creating a duplicate.
+
+Feature requests use these statuses:
 
 - `draft` - needs more context before it is actionable.
 - `user_formed` - user clearly requested the capability and the request is ready.
 - `agent_formed` - agent noticed a useful opportunity and formed a request that is ready for user review.
-- `accepted` - user has agreed it should be implemented eventually.
-- `in_progress` - actively being worked on.
-- `resolved` - implemented or otherwise satisfied.
+- `in_progress` - approved work is actively being implemented.
+- `resolved` - implemented or otherwise satisfied; record guidance targets, skill paths, files, commits, or PRs in the resolution notes.
 - `rejected` - intentionally not planned; include the reason.
 - `superseded` - replaced by another request; link the replacement.
 
-An actionable feature request should include:
+A ready request includes the requested capability, observed friction or user need, expected benefit, trigger conditions, expected behavior, current workaround, suggested implementation, approval needed, user communication, and reminder rule.
 
-- requested capability
-- observed friction
-- user need
-- expected benefit
-- trigger conditions
-- expected behavior
-- current workaround
-- suggested implementation
-- approval needed
-- user communication
-- reminder rule
+`agent_formed` is the moderation state for agent-spotted ideas. It means the agent has made the opportunity clear enough for user review: what friction was observed, what capability is proposed, why it would help, and what approval is needed. The agent tells the user when it creates or materially updates a request, when the request moves to `in_progress`, `rejected`, or `resolved`, and when a later task matches an active request's reminder rule.
 
-`agent_formed` must mean ready enough for user review, not merely an interesting thought. The request should explain the concrete friction observed, the proposed capability, the expected benefit, and what approval is needed before implementation.
-
-When a request reaches `user_formed`, `agent_formed`, `accepted`, is materially updated, is `rejected`, or is `resolved`, the agent should tell the user immediately. Later, if a task, problem, error, or workaround matches a request's trigger conditions, the agent should briefly remind the user by ID and explain why it is relevant. Only `user_formed`, `agent_formed`, `accepted`, and `in_progress` requests should trigger proactive reminders.
-
-## Feature Requests as Skill-Creation Moderation
-
-`FEATURE_REQUESTS.md` is the pre-moderation gate for agent-grown capabilities. If an agent spots an opportunity to grow from a recurring limitation, missing workflow, repeated workaround, or useful small automation opportunity, it should first create or update an `agent_formed` feature request and tell the user about it.
-
-The agent must not create a new skill from an agent-spotted opportunity until the user accepts the request. After acceptance, change the request to `accepted`; then use `assets/SKILL-TEMPLATE.md` and `scripts/extract-skill.sh` if a reusable skill is the right implementation path. When the skill or capability is implemented, mark the feature request `resolved` and record `Skill-Path`, changed files, or the commit/PR in the resolution.
-
-## Promotion and Skill Extraction
-
-Keep one-off corrections, narrow incidents, and unverified ideas in `.learnings/`. Promote only when a lesson prevents repeated mistakes, documents a durable convention, or belongs in guidance future agents already read.
-
-Common promotion targets include `AGENTS.md`, `TOOLS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `SOUL.md`, or another engine-specific instruction file. Choose the target by behavior: agent workflow belongs in agent guidance, local tool gotchas belong in tool guidance, behavioral rules belong in behavior guidance, and project conventions belong in the instruction file that the local engine actually loads.
-
-For reusable triggered procedures that have passed the feature-request gate, extract a skill from `assets/SKILL-TEMPLATE.md` with:
+The agent will not create a new skill from an agent-spotted opportunity until the user approves the matching feature request. After user approval, the request moves directly to `in_progress` status while the implementation is underway. If a reusable skill is the right implementation path, the agent previews and extracts it with `scripts/extract-skill.sh` from `assets/SKILL-TEMPLATE.md`:
 
 ```bash
 scripts/extract-skill.sh skill-name --dry-run
@@ -233,7 +203,7 @@ scripts/extract-skill.sh skill-name --template minimal
 scripts/extract-skill.sh skill-name --template scripts
 ```
 
-Before extraction, search existing skills for duplicate triggers or use cases. For agent-spotted opportunities, confirm the matching feature request is `accepted` before creating the skill. After extraction, update the source request or learning to `resolved` or `promoted_to_skill` and record `Skill-Path`.
+Before extraction, the agent searches existing skills for duplicate triggers or use cases. When the capability ships, it marks the source request `resolved` and records the `Skill-Path`, changed files, commit, or PR.
 
 ## Gitignore Choices
 
@@ -261,4 +231,4 @@ Once active, agents should use `SKILL.md` as the source of truth for:
 - how to resolve and promote entries
 - when to extract a recurring lesson into a reusable skill
 
-Humans should use this `README.md` for installation, activation, and repository orientation.
+Use this `README.md` for installation, activation, and repository orientation.
