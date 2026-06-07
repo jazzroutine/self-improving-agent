@@ -1,44 +1,46 @@
 # Learnings
 
-Corrections, insights, and knowledge gaps captured during development.
+Active durable corrections, insights, knowledge gaps, and reusable practices. Keep this file small; it is working memory, not history.
 
-**Categories**: correction | insight | knowledge_gap | best_practice
-**Areas**: frontend | backend | infra | tests | docs | config
-**Statuses**: pending | in_progress | resolved | wont_fix | promoted
+## Rules
 
-## Status Definitions
+- Search before writing by title, lesson, source, files, tags, `Pattern-Key`, and related IDs.
+- Update same lessons; merge overlap; link only useful related lessons with `See Also`.
+- Keep full entries only while they actively change future behavior.
+- After promotion or supersession, replace the full entry with a one-line tombstone.
 
-| Status | Meaning |
-|--------|---------|
-| `pending` | Not yet addressed |
-| `in_progress` | Actively being worked on |
-| `resolved` | Issue fixed or knowledge integrated |
-| `wont_fix` | Decided not to address (reason in Resolution) |
-| `promoted` | Elevated to durable guidance or extracted as a reusable skill; record the destination in notes or metadata |
+Categories: `correction`, `insight`, `knowledge_gap`, `best_practice`.
 
-## Skill Extraction Fields
-
-When a learning is promoted to durable guidance or a reusable skill, add destination details:
+## Active Entry
 
 ```markdown
-**Status**: promoted
-**Skill-Path**: skills/skill-name
+## [LRN-YYYYMMDD-XXX] category: short_title
+
+**Logged**: ISO-8601 timestamp
+**Priority**: low | medium | high | critical
+
+### Lesson
+Reusable rule/fact.
+
+### Action
+Future behavior.
+
+### Metadata
+- Source: user_correction | agent_discovery | repeated_pattern | review
+- Pattern-Key:
+- Related Files:
+- See Also:
 ```
 
-Example:
+## Tombstone
+
+Use only after promotion or supersession. Replace the full entry with one line:
+
 ```markdown
-## [LRN-20250115-001] best_practice
-
-**Logged**: 2025-01-15T10:00:00Z
-**Priority**: high
-**Status**: promoted
-**Skill-Path**: skills/docker-m1-fixes
-**Area**: infra
-
-### Summary
-Docker build fails on Apple Silicon due to platform mismatch
-...
+## [LRN-YYYYMMDD-XXX] short_title - promoted|superseded: target, YYYY-MM-DD. Note: reason.
 ```
+
+Examples of `target`: `AGENTS.md`, `TOOLS.md`, `SOUL.md`, `skills/name/SKILL.md`, `LRN-YYYYMMDD-XXX`, `deleted`.
+Examples of `reason`: `moved after review`, `user asked`, `no longer valid`, `duplicate merged`.
 
 ---
-

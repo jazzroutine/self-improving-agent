@@ -54,24 +54,27 @@ ID format: `LRN-YYYYMMDD-XXX`, `ERR-YYYYMMDD-XXX`, `FEAT-YYYYMMDD-XXX`; `XXX` ma
 
 Learning entry minimum fields:
 
-- ID, category, logged timestamp, priority, status, area.
-- Summary, details, suggested action.
-- Metadata: source, related files, tags, see-also, optional `Pattern-Key`, recurrence fields.
+- ID, category, logged timestamp, priority.
+- Lesson and action.
+- Metadata: source, optional `Pattern-Key`, related files, tags, see-also.
+- No `Area`; no routine `Status`.
+- When promoted or superseded, replace the full entry with a one-line tombstone.
 
 Error entry minimum fields:
 
-- ID, command/tool/integration name, logged timestamp, priority, status, area.
-- Summary, short representative redacted error excerpt.
-- Context examples, lesson, suggested fix, avoidance rule.
+- ID, command/tool/integration name, logged timestamp, priority.
+- Summary, shortest useful redacted error excerpt.
+- Context, lesson, fix, avoidance rule.
 - Metadata: `Pattern-Key`, reproducible, first/last seen, recurrence count, related files, see-also.
+- Keep full entries only while active/recent; after fix, promotion, or feature-request handoff, replace with a one-line tombstone.
 
 Feature request entry minimum fields:
 
-- ID, capability name, logged timestamp, priority, status, area.
-- Requested capability, observed friction, user need, expected benefit.
-- Trigger conditions, expected behavior, current workaround, suggested implementation.
-- Approval needed, user communication, reminder rule.
+- ID, capability name, logged timestamp, priority, status.
+- Need, friction, expected behavior, trigger conditions.
+- Workaround, implementation direction, approval state, user communication, reminder rule.
 - Metadata: frequency, source, related errors/learnings/files, see-also.
+- No `Area`; use related files/tags only when they improve retrieval.
 
 Use `assets/*.md` as canonical blank formats when available.
 
@@ -82,11 +85,34 @@ For recurring failures, update one canonical `ERR-*` entry:
 - Increment `Recurrence-Count`.
 - Update `Last-Seen`.
 - Add one short representative example only if it improves recognition.
-- Strengthen `Lesson`, `Suggested Fix`, or `Avoidance Rule` if incomplete.
+- Strengthen `Lesson`, `Fix`, or `Avoidance Rule` if incomplete.
 - Raise priority if recurrence or impact justifies it.
 - Promote prevention rules when the pattern is proven.
 
 Treat changed dates, paths, or surrounding tasks as the same pattern when root cause and fix are the same.
+
+Error escalation:
+
+Escalate an error pattern when any condition is true:
+
+- `Recurrence-Count >= 3`.
+- Same pattern appears across 2+ distinct tasks.
+- Impact is high/critical.
+- Fix needs missing tooling, automation, a skill, user action, or environment change.
+
+Escalation target:
+
+- Prevention rule -> `Active Rules From Past Errors`, `AGENTS.md`, `TOOLS.md`, or a skill.
+- Missing reusable capability -> create/update `.learnings/FEATURE_REQUESTS.md`, link `Related Errors`, and keep the error active until the feature request has enough detail to take over tracking.
+- User-owned environment problem -> ask the user directly; keep the error active until fixed or handed off.
+
+Error retention:
+
+- Keep `ERRORS.md` as active/recent error memory, not history.
+- Keep full entries only while they help avoid, diagnose, or escalate a live/recent pattern.
+- After fix, promotion, supersession, stale cleanup, or feature-request handoff, shrink the entry to a one-line tombstone.
+- Tombstone format: `## [ERR-ID] short_title - fixed|promoted|moved_to_feature|superseded|stale: target, YYYY-MM-DD. Note: reason.`
+- Do not create archive files unless the user explicitly asks.
 
 ## Feature Request Workflow
 
@@ -108,6 +134,8 @@ Formation rules:
 - Use `agent_formed` only when observed friction, expected benefit, trigger conditions, expected behavior, workaround, implementation direction, approval need, user communication, and reminder rule are clear.
 - If vague, ask one short clarification question or keep `draft`.
 - If matching request exists, update it with recurrence, context, related IDs, or stronger reminder rules.
+- When created from recurring errors, link `Related Errors` and let the feature request become the canonical tracker only after it has `Need`, `Behavior`, `Triggers`, `Implementation`, `Status`, and `Related Errors`.
+- After the feature request is canonical, tombstone the source error as `moved_to_feature` and point to the `FEAT-*` ID.
 
 Reminder rules:
 
@@ -115,6 +143,15 @@ Reminder rules:
 - Remind when a later task/error/workaround/limitation matches trigger conditions.
 - Reminder content: request ID, why relevant now, recommended action: implement, reject, defer, or keep pending.
 - Do not remind for `draft`, `resolved`, `rejected`, or `superseded` unless asked.
+
+Feature request retention:
+
+- Keep full entries for `draft`, `user_formed`, `agent_formed`, and `in_progress` while they are actionable or reminder-relevant.
+- Keep `resolved`, `rejected`, and `superseded` entries full only while their details are still useful.
+- When inactive entries no longer need full detail, shrink them to a one-line tombstone.
+- Tombstone format: `## [FEAT-ID] capability_name - resolved|rejected|superseded: outcome_or_target, YYYY-MM-DD. Note: reason.`
+- For resolved skills, tools, scripts, or workflows, the tombstone note must name the existing skill path or created files clearly enough to prevent duplicate proposals or duplicate creation later.
+- Search active entries and tombstones before proposing, creating, or approving a similar capability.
 
 ## Skill Extraction Gate
 
@@ -124,7 +161,7 @@ If the user explicitly asks to create a skill, proceed while checking for duplic
 
 If the agent spots the opportunity:
 
-1. Search `.learnings/FEATURE_REQUESTS.md` and existing skills for the same trigger/workflow/use case.
+1. Search `.learnings/FEATURE_REQUESTS.md` active entries, tombstones, and existing skills for the same trigger/workflow/use case.
 2. Create/update an `agent_formed` feature request.
 3. Tell the user it is ready for review and no skill/tool will be created without approval.
 4. After approval, set status `in_progress`.
@@ -148,11 +185,14 @@ Extraction quality gates:
 
 When an entry is fixed, implemented, rejected, superseded, or promoted:
 
-1. Update `**Status**`.
-2. Add `### Resolution` with date/time, commit/PR or file path if relevant, and short notes.
-3. For promoted learnings/errors, record destination path or `Skill-Path`.
-
-Learning and error entries may use `promoted` when their lesson has moved into durable guidance.
+1. Update feature request `**Status**` when applicable.
+2. For errors, replace inactive full entries with a one-line tombstone naming status, target, date, and reason.
+3. For learnings, do not append lifecycle metadata to active entries. Replace promoted or superseded entries with a one-line tombstone.
+4. For feature requests, keep inactive full entries only while details are useful; then replace them with a one-line tombstone that prevents duplicate capability work.
+5. Tombstone formats:
+   - `## [LRN-ID] short_title - promoted|superseded: target, YYYY-MM-DD. Note: reason.`
+   - `## [ERR-ID] short_title - fixed|promoted|moved_to_feature|superseded|stale: target, YYYY-MM-DD. Note: reason.`
+   - `## [FEAT-ID] capability_name - resolved|rejected|superseded: outcome_or_target, YYYY-MM-DD. Note: reason.`
 
 ## Promotion
 
@@ -172,9 +212,18 @@ Promotion workflow:
 1. Distill to a concise rule/procedure.
 2. Search target and existing skills for overlap.
 3. Add only the durable guidance.
-4. Mark source entry `promoted` and record target.
+4. For learnings, replace the source entry with a one-line tombstone naming status, target, date, and reason.
+5. For errors, replace the source entry with a one-line tombstone naming status, target, date, and reason.
 
-Promote recurring error patterns when `Recurrence-Count >= 3`, seen across at least two distinct tasks, and within a 30-day window.
+Learning retention:
+
+- Keep `LEARNINGS.md` as active working memory, not history.
+- Keep only active behavior-changing lessons as full entries.
+- After promotion or supersession, shrink the entry to a one-line tombstone.
+- Prefer merging duplicate/overlapping lessons into one stronger active entry.
+- Do not create archive files unless the user explicitly asks.
+
+Recurring error patterns follow Error Deduplication escalation rules.
 
 ## Periodic Review
 

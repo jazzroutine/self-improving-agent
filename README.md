@@ -157,8 +157,10 @@ This skill gives agents a small memory system for improving their future work. I
 3. Corrections, knowledge gaps, and reusable working habits go in `.learnings/LEARNINGS.md`.
 4. Command, tool, API, and integration failures go in `.learnings/ERRORS.md`, grouped by root cause when possible.
 5. Missing capabilities, repeated workaround ideas, and agent-spotted automation or skill opportunities go in `.learnings/FEATURE_REQUESTS.md`.
-6. Entries stay short and useful: what happened, what to do differently, and any safe context needed later. They should not include secrets, raw transcripts, tokens, environment variables, or long command output.
-7. If the same issue becomes a general rule, the agent can copy that rule into the instruction file future agents actually load, such as `AGENTS.md`, `TOOLS.md`, `SOUL.md` for OpenClaw, or a new issue-specific skill. The original `.learnings/` entry remains as the source note, so the reason for the rule is still traceable.
+6. If a recurring error needs a reusable capability, the agent creates or updates a feature request and keeps the full error entry active until that request is complete enough to take over tracking.
+7. Entries stay short and useful: what happened, what to do differently, and any safe context needed later. They should not include secrets, raw transcripts, tokens, environment variables, or long command output.
+8. When an entry is fixed, promoted, superseded, stale, or handed off, the agent compacts it to a one-line tombstone instead of preserving a bulky history log.
+9. If the same issue becomes a general rule, the agent can copy that rule into the instruction file future agents actually load, such as `AGENTS.md`, `TOOLS.md`, `SOUL.md` for OpenClaw, or a new issue-specific skill. The original `.learnings/` entry remains as the source note, so the reason for the rule is still traceable.
 
 ## Entry Types
 
@@ -166,11 +168,24 @@ This skill gives agents a small memory system for improving their future work. I
 
 | File | Use For | Key Rule |
 |------|---------|----------|
-| `.learnings/LEARNINGS.md` | Corrections, knowledge gaps, insights, and recurring best practices | Will search for near-duplicates before adding. |
-| `.learnings/ERRORS.md` | Command, tool, API, integration, and operation failures | Will search for near-duplicates before adding and maintain one entry per recurring root cause. |
-| `.learnings/FEATURE_REQUESTS.md` | Missing capabilities, reusable limitations, repeated workaround automation ideas, and agent-spotted skill opportunities | Will treat requests as a user-involved loop and moderation gate: form the need, notify when actionable, require user approval before agent-created skill creation, and remind when related issue or opportunity appears again. |
+| `.learnings/LEARNINGS.md` | Corrections, knowledge gaps, insights, and recurring best practices | Search for near-duplicates before adding; promote or supersede active lessons into tombstones when the durable rule lives elsewhere. |
+| `.learnings/ERRORS.md` | Command, tool, API, integration, and operation failures | Maintain one entry per recurring root cause; escalate repeated patterns; tombstone fixed, promoted, stale, superseded, or feature-handed-off errors. |
+| `.learnings/FEATURE_REQUESTS.md` | Missing capabilities, reusable limitations, repeated workaround automation ideas, and agent-spotted skill opportunities | Act as the moderation gate before new skills or automations; search active entries and tombstones before proposing duplicate capability work. |
 
 Error entries use the shape: `Representative Errors`, `Context Examples`, `Lesson`, `Issue`, `Suggested Fix`, `Avoidance Rule`, and recurrence metadata such as `Pattern-Key`, `First-Seen`, `Last-Seen`, and `Recurrence-Count`.
+
+## Retention and Handoff Logic
+
+The `.learnings/` files are working memory, not permanent archives. Full entries stay only while they help future agents decide what to do. Once the useful rule or capability is captured elsewhere, the original entry should shrink to a one-line tombstone with the target, date, and reason.
+
+Use this flow for recurring errors that need tooling, automation, or a new skill:
+
+1. Keep one canonical `ERR-*` entry for the recurring root cause.
+2. Create or update one matching `FEAT-*` entry instead of proposing a fresh capability each time.
+3. Make the feature request actionable by filling `Need`, `Behavior`, `Triggers`, `Implementation`, `Status`, and `Related Errors`.
+4. Only then compact the source error to `moved_to_feature`, pointing at the `FEAT-*` ID.
+
+Feature-request tombstones matter for duplicate prevention. If a request was resolved by an existing skill, tool, script, workflow, commit, or guidance file, the tombstone note must name that target clearly enough that a later agent can find it before proposing or creating the same capability again.
 
 ## Skill-Creation and Promotion Logic
 
@@ -178,7 +193,7 @@ The skill separates small local notes from durable guidance. `.learnings/` keeps
 
 Use the target that matches the behavior: agent workflow belongs in agent guidance, local command and integration gotchas belong in tool guidance, communication rules belong in behavior guidance, and project conventions belong in the project instruction file. The `.learnings/` entry remains as the traceable source note and should record the promoted target.
 
-New reusable skills follow the feature-request loop. The agent uses `.learnings/FEATURE_REQUESTS.md` when a missing capability, recurring limitation, repeated workaround, or concrete agent-spotted opportunity deserves future attention. Before adding a request, it searches existing requests by capability, affected tool, problem area, trigger condition, and related error or learning ID, then updates a matching request instead of creating a duplicate.
+New reusable skills follow the feature-request loop. The agent uses `.learnings/FEATURE_REQUESTS.md` when a missing capability, recurring limitation, repeated workaround, or concrete agent-spotted opportunity deserves future attention. Before adding a request, it searches active requests and tombstones by capability, affected tool, problem area, trigger condition, related error or learning ID, and prior implementation target, then updates a matching request instead of creating a duplicate.
 
 Feature requests use these statuses:
 
@@ -190,7 +205,7 @@ Feature requests use these statuses:
 - `rejected` - intentionally not planned; include the reason.
 - `superseded` - replaced by another request; link the replacement.
 
-A ready request includes the requested capability, observed friction or user need, expected benefit, trigger conditions, expected behavior, current workaround, suggested implementation, approval needed, user communication, and reminder rule.
+A ready request includes the requested capability, observed friction or user need, expected benefit, trigger conditions, expected behavior, current workaround, suggested implementation, approval needed, user communication, reminder rule, and related errors or learnings when applicable.
 
 `agent_formed` is the moderation state for agent-spotted ideas. It means the agent has made the opportunity clear enough for user review: what friction was observed, what capability is proposed, why it would help, and what approval is needed. The agent tells the user when it creates or materially updates a request, when the request moves to `in_progress`, `rejected`, or `resolved`, and when a later task matches an active request's reminder rule.
 
@@ -203,7 +218,7 @@ scripts/extract-skill.sh skill-name --template minimal
 scripts/extract-skill.sh skill-name --template scripts
 ```
 
-Before extraction, the agent searches existing skills for duplicate triggers or use cases. When the capability ships, it marks the source request `resolved` and records the `Skill-Path`, changed files, commit, or PR.
+Before extraction, the agent searches existing skills, active feature requests, and feature-request tombstones for duplicate triggers or use cases. When the capability ships, it marks the source request `resolved` and records the `Skill-Path`, changed files, commit, or PR so future agents can find the existing solution.
 
 ## Gitignore Choices
 

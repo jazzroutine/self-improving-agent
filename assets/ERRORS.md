@@ -1,51 +1,67 @@
 # Errors Log
 
-Command failures, exceptions, and unexpected behaviors. Keep this file as a compact error index, not a transcript.
+Active/recent pattern index for command/tool/API failures. No transcripts. Not history.
 
 ## Active Rules From Past Errors
 
-Add short prevention rules here after an error pattern repeats or is promoted. Keep each rule actionable and point to the canonical `ERR-*` entry when useful.
+Add proven prevention rules here; link canonical `ERR-*` when useful.
 
----
+## Rules
 
-## Canonical Error Entries
+- Search before writing by command/tool/API, exact redacted error, root cause, affected path/integration, `Pattern-Key`, and related IDs.
+- Same cause + same fix = update one canonical entry; increment `Recurrence-Count` and `Last-Seen`.
+- Keep full entries only while they help avoid, diagnose, or escalate an active/recent pattern.
+- Escalate when recurrence is `>= 3`, appears across 2+ tasks, impact is high/critical, or fix needs missing tooling/user action.
+- Missing reusable capability -> create/update `FEATURE_REQUESTS.md`, link `Related Errors`, and keep the error active until the feature request is canonical.
+- A feature request is canonical when it has `Need`, `Behavior`, `Triggers`, `Implementation`, `Status`, and `Related Errors`; then tombstone the error as `moved_to_feature` pointing to the `FEAT-*` ID.
+- Proven prevention rule -> move to `Active Rules From Past Errors`, durable guidance, or a skill, then tombstone the error.
+- Fixed/superseded/stale entries become one-line tombstones; do not create archive files unless user asks.
 
-Before adding a new entry, search this file by command/tool name, exact error text, root cause, affected path or integration, and `Pattern-Key`. If the same pattern already exists, update that entry instead of creating a duplicate.
+## Tombstone
 
-````markdown
-## [ERR-YYYYMMDD-XXX] skill_or_command_name
-
-### Summary
-Brief description of what failed.
-
-### Representative Errors
-```text
-Short exact error message or redacted output excerpt
+```markdown
+## [ERR-YYYYMMDD-XXX] short_title - fixed|promoted|moved_to_feature|superseded|stale: target, YYYY-MM-DD. Note: reason.
 ```
 
-### Context Examples
-- Command/operation attempted
-- Input or parameters used
-- Environment details if relevant
-- Summary or redacted excerpt of relevant output
+## Entry Format
+
+````markdown
+## [ERR-YYYYMMDD-XXX] command_or_integration
+
+**Logged**: ISO-8601 timestamp
+**Priority**: low | medium | high | critical
+
+### Summary
+Failure + impact in one sentence.
+
+### Error
+```text
+Shortest useful redacted excerpt.
+```
+
+### Context
+- Operation:
+- Environment:
+- Trigger:
 
 ### Lesson
-What the failure teaches.
+Reusable cause or constraint.
 
-### Suggested Fix
-If identifiable, what might resolve this.
+### Fix
+Preferred fix, workaround, or escalation action.
 
-### Avoidance Rule
-Concrete prevention rule future agents should follow.
+### Avoid
+Prevention rule.
 
 ### Metadata
-- Pattern-Key: tool.sandbox.rtk_missing
+- Pattern-Key:
 - Reproducible: yes | no | unknown
 - First-Seen: YYYY-MM-DD
 - Last-Seen: YYYY-MM-DD
 - Recurrence-Count: 1
-- Related Files: path/to/file.ext
-- See Also: ERR-20250110-001
+- Related Feature Requests:
+- Related Files:
+- See Also:
+````
 
 ---
-````
