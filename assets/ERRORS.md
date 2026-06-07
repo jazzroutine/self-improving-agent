@@ -13,7 +13,7 @@ Add proven prevention rules here; link canonical `ERR-*` when useful.
 - Keep full entries only while they help avoid, diagnose, or escalate an active/recent pattern.
 - Escalate when recurrence is `>= 3`, appears across 2+ tasks, impact is high/critical, or fix needs missing tooling/user action.
 - Missing reusable capability -> create/update `FEATURE_REQUESTS.md`, link `Related Errors`, and keep the error active until the feature request is canonical.
-- A feature request is canonical when it has `Need`, `Behavior`, `Triggers`, `Implementation`, `Status`, and `Related Errors`; then tombstone the error as `moved_to_feature` pointing to the `FEAT-*` ID.
+- A feature request is canonical when it has `Need`, `Expected Behavior`, `Trigger Conditions`, `Implementation Direction`, `Status`, and `Related Errors`; then tombstone the error as `moved_to_feature` pointing to the `FEAT-*` ID.
 - Proven prevention rule -> move to `Active Rules From Past Errors`, durable guidance, or a skill, then tombstone the error.
 - Fixed/superseded/stale entries become one-line tombstones; do not create archive files unless user asks.
 

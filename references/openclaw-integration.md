@@ -141,10 +141,10 @@ Feature requests are user-visible backlog items and the moderation gate for agen
 1. Detect a missing capability, reusable limitation, repeated workaround, or concrete agent-spotted skill/automation opportunity.
 2. Search `.learnings/FEATURE_REQUESTS.md` for a matching request.
 3. Ask one short clarification question if the request is too vague to make actionable.
-4. Form the request with requested capability, observed friction, user need, expected benefit, trigger conditions, expected behavior, current workaround, suggested implementation, approval needed, user communication, and reminder rule.
+4. Form the request with capability name, need, friction, expected behavior, trigger conditions, current workaround, implementation direction, approval state, user communication, and reminder rule.
 5. Use `user_formed` when the user clearly requested the capability and the request is ready.
 6. Use `agent_formed` when the agent noticed the opportunity and the request is ready enough for user review.
-7. Tell the user immediately when a request becomes `user_formed`, `agent_formed`, `in_progress`, materially updated, `rejected`, or `resolved`.
+7. Tell the user only when a feature-request change affects action: status becomes `user_formed`, `agent_formed`, `in_progress`, `resolved`, or `rejected`, or scope, trigger conditions, approval need, implementation target, or resolution changes.
 8. Remind the user later when a task, problem, error, or workaround matches a `user_formed`, `agent_formed`, or `in_progress` request's trigger conditions.
 
 Use these statuses for feature requests: `draft`, `user_formed`, `agent_formed`, `in_progress`, `resolved`, `rejected`, and `superseded`. Drafts stay quiet unless clarification is needed or the user returns to the topic. Resolved, rejected, and superseded requests should not trigger proactive reminders.
@@ -235,7 +235,7 @@ sessions_spawn(task="Research X and report back", label="research")
 
 ### Standard Triggers
 - User corrections ("No, that's wrong...")
-- Command failures (non-zero exit codes)
+- Reusable or recurring command failures
 - API errors
 - Knowledge gaps
 
@@ -243,10 +243,10 @@ sessions_spawn(task="Research X and report back", label="research")
 
 | Trigger | Action |
 |---------|--------|
-| Tool call error | Log or update `.learnings/ERRORS.md` first; promote repeated tool gotchas to `TOOLS.md` |
+| Reusable, repeated, surprising, high-impact, or likely-recurring tool error | Log or update `.learnings/ERRORS.md` first; promote repeated tool gotchas to `TOOLS.md` |
 | Session handoff confusion | Log or update `.learnings/LEARNINGS.md` first; promote repeated workflow rules to `AGENTS.md` |
 | Model behavior surprise | Log or update `.learnings/LEARNINGS.md` first; promote proven behavior rules to `SOUL.md` or equivalent behavior guidance |
-| Missing capability or agent-spotted skill opportunity | Search or update `.learnings/FEATURE_REQUESTS.md`; form actionable `user_formed` or `agent_formed` requests with status, trigger conditions, approval needed, user communication, and reminder rule |
+| Missing capability or agent-spotted skill opportunity | Search or update `.learnings/FEATURE_REQUESTS.md`; form actionable `user_formed` or `agent_formed` requests with status, expected behavior, trigger conditions, implementation direction, approval state, user communication, and reminder rule |
 | Related task/problem touches existing feature request | Remind the user only for `user_formed`, `agent_formed`, or `in_progress` requests, naming the request ID and relevance |
 | Skill issue | Log to `.learnings/`; if it is a reusable triggered procedure, extract a skill with `assets/SKILL-TEMPLATE.md` or report upstream |
 

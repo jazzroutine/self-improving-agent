@@ -25,7 +25,7 @@ Before logging:
 
 **Log when:**
 - User corrects you -> `.learnings/LEARNINGS.md`
-- Command/operation fails -> `.learnings/ERRORS.md`
+- Reusable, repeated, surprising, high-impact, or likely-recurring command/operation failure -> `.learnings/ERRORS.md`
 - User wants missing capability -> `.learnings/FEATURE_REQUESTS.md`
 - Reusable limitation, repeated workaround, or agent-spotted skill opportunity appears -> `.learnings/FEATURE_REQUESTS.md`
 - You discover your knowledge was wrong -> `.learnings/LEARNINGS.md`
@@ -35,8 +35,8 @@ Before logging:
 - Create/update a request only for explicit missing capability, reusable limitation, repeated workaround, or concrete agent-spotted skill opportunity
 - If vague, ask one short clarification question before forming it
 - Use statuses: `draft`, `user_formed`, `agent_formed`, `in_progress`, `resolved`, `rejected`, `superseded`
-- `agent_formed` must include observed friction, proposed capability, expected benefit, and approval needed
-- Tell the user when a request becomes `user_formed`, `agent_formed`, `in_progress`, materially updated, `rejected`, or `resolved`
+- `agent_formed` must include observed friction, expected behavior, trigger conditions, implementation direction, approval need, user communication, and reminder rule
+- Tell the user only when a feature-request change affects action: status becomes `user_formed`, `agent_formed`, `in_progress`, `resolved`, or `rejected`, or scope, trigger conditions, approval need, implementation target, or resolution changes
 - Remind later only for `user_formed`, `agent_formed`, or `in_progress` requests when related tasks, errors, limitations, or workarounds appear
 - Do not create an agent-proposed skill until the matching feature request is approved; then use `assets/SKILL-TEMPLATE.md` and `scripts/extract-skill.sh` if needed
 

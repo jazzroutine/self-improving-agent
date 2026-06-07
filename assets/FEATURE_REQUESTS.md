@@ -9,10 +9,10 @@ Moderation log for reusable missing capabilities, repeated workarounds, and agen
 - Ask one short question if not actionable.
 - Agent-spotted skill/tool ideas must be `agent_formed` here before implementation.
 - Recurring errors that need reusable tooling/automation belong here; link `Related Errors`.
-- When created from an error, this request becomes canonical only after `Need`, `Behavior`, `Triggers`, `Implementation`, `Status`, and `Related Errors` are filled enough for future agents to act without rereading full error history.
+- When created from an error, this request becomes canonical only after `Need`, `Expected Behavior`, `Trigger Conditions`, `Implementation Direction`, `Status`, and `Related Errors` are filled enough for future agents to act without rereading full error history.
 - After that, compact the source error to a `moved_to_feature` tombstone pointing to this `FEAT-*` ID.
 - User approval is required before creating agent-spotted skills/tools.
-- Notify user when status becomes `user_formed`, `agent_formed`, `in_progress`, materially updated, `resolved`, or `rejected`.
+- Notify the user only when a feature-request change affects action: status becomes `user_formed`, `agent_formed`, `in_progress`, `resolved`, or `rejected`, or scope, trigger conditions, approval need, implementation target, or resolution changes.
 
 ## Status
 
@@ -64,19 +64,19 @@ Outcome/capability needed.
 ### Friction
 Observed/user-stated pain.
 
-### Behavior
+### Expected Behavior
 Expected behavior.
 
-### Triggers
+### Trigger Conditions
 When future agents should surface this.
 
 ### Workaround
 Current manual path.
 
-### Implementation
+### Implementation Direction
 Likely approach/files/tool/hook/workflow/skill.
 
-### Approval
+### Approval State
 What must be approved before work, especially for `agent_formed`.
 
 ### User Communication

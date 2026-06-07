@@ -9,8 +9,6 @@ Concrete examples of well-formatted entries with all fields.
 
 **Logged**: 2025-01-15T10:30:00Z
 **Priority**: high
-**Status**: pending
-**Area**: tests
 
 ### Summary
 Incorrectly assumed pytest fixtures are scoped to function by default
@@ -40,8 +38,6 @@ check existing fixtures for scope patterns before defaulting to function scope.
 
 **Logged**: 2025-01-15T14:22:00Z
 **Priority**: medium
-**Status**: resolved
-**Area**: config
 
 ### Summary
 Project uses pnpm not npm for package management
@@ -70,61 +66,13 @@ Use `pnpm install` for this project.
 ## Learning: Promoted to Durable Guidance
 
 ```markdown
-## [LRN-20250115-003] best_practice
-
-**Logged**: 2025-01-15T16:00:00Z
-**Priority**: high
-**Status**: promoted
-**Promoted**: AGENTS.md
-**Area**: backend
-
-### Summary
-API responses must include correlation ID from request headers
-
-### Details
-All API responses should echo back the X-Correlation-ID header from 
-the request. This is required for distributed tracing. Responses 
-without this header break the observability pipeline.
-
-### Suggested Action
-Always include correlation ID passthrough in API handlers.
-
-### Metadata
-- Source: user_feedback
-- Related Files: src/middleware/correlation.ts
-- Tags: api, observability, tracing
-
----
+## [LRN-20250115-003] api_correlation_id - promoted: AGENTS.md, 2025-01-15. Note: API responses must include correlation ID from request headers.
 ```
 
 ## Learning: Promoted to AGENTS.md
 
 ```markdown
-## [LRN-20250116-001] best_practice
-
-**Logged**: 2025-01-16T09:00:00Z
-**Priority**: high
-**Status**: promoted
-**Promoted**: AGENTS.md
-**Area**: backend
-
-### Summary
-Must regenerate API client after OpenAPI spec changes
-
-### Details
-When modifying API endpoints, the TypeScript client must be regenerated.
-Forgetting this causes type mismatches that only appear at runtime.
-The generate script also runs validation.
-
-### Suggested Action
-Add to agent workflow: after any API changes, run `pnpm run generate:api`.
-
-### Metadata
-- Source: error
-- Related Files: openapi.yaml, src/client/api.ts
-- Tags: api, codegen, typescript
-
----
+## [LRN-20250116-001] regenerate_api_client - promoted: AGENTS.md, 2025-01-16. Note: Regenerate the API client after OpenAPI spec changes.
 ```
 
 ## Error Entry
@@ -134,8 +82,6 @@ Add to agent workflow: after any API changes, run `pnpm run generate:api`.
 
 **Logged**: 2025-01-15T09:15:00Z
 **Priority**: high
-**Status**: pending
-**Area**: infra
 
 ### Summary
 Docker build fails on M1 Mac due to platform mismatch
@@ -178,8 +124,6 @@ When building Docker images on mixed-architecture hosts, verify base image platf
 
 **Logged**: 2025-01-20T11:30:00Z
 **Priority**: critical
-**Status**: pending
-**Area**: backend
 
 ### Summary
 Third-party payment API timeout during checkout
@@ -223,19 +167,12 @@ Before treating a timeout as an isolated incident, check existing timeout patter
 **Logged**: 2025-01-15T16:45:00Z
 **Priority**: medium
 **Status**: agent_formed
-**Area**: backend
 
-### Requested Capability
-Export analysis results to CSV format.
+### Need
+Share analysis results with non-technical stakeholders in Excel-compatible CSV format.
 
-### Observed Friction
+### Friction
 The user runs weekly reports and currently has to copy analysis output into a spreadsheet by hand.
-
-### User Need
-The user needs to share results with non-technical stakeholders in Excel without manually copying command output.
-
-### Expected Benefit
-CSV export would remove repetitive report formatting and make the analyze command useful in spreadsheet workflows.
 
 ### Trigger Conditions
 A future task mentions weekly reporting, spreadsheet sharing, manual report copying, or alternate output formats for the analyze command.
@@ -243,19 +180,19 @@ A future task mentions weekly reporting, spreadsheet sharing, manual report copy
 ### Expected Behavior
 The analyze command can write CSV output with stable headers and values that open cleanly in spreadsheet tools.
 
-### Current Workaround
+### Workaround
 The user copies analysis output manually and reformats it for Excel.
 
-### Suggested Implementation
+### Implementation Direction
 Add an `--output csv` option to the analyze command and reuse the existing structured output path used by `--output json`.
 
-### Approval Needed
+### Approval State
 User approval is needed before implementing the CSV output path because this was an agent-spotted automation opportunity, not an explicit current task request.
 
 ### User Communication
 I added FEAT-20250115-001 as agent_formed because weekly report sharing currently requires manual copying. It is ready for your review; I will not implement it unless you approve it.
 
-### Reminder Rule
+### Reminder
 Remind the user when work touches report exports, analyze command output, or repeated manual spreadsheet formatting.
 
 ### Metadata
@@ -277,19 +214,12 @@ Remind the user when work touches report exports, analyze command output, or rep
 **Logged**: 2025-01-16T10:15:00Z
 **Priority**: medium
 **Status**: user_formed
-**Area**: frontend
 
-### Requested Capability
-Dark mode support for the dashboard.
+### Need
+Lower-glare dashboard theme for evening sessions.
 
-### Observed Friction
+### Friction
 The user said the bright dashboard is uncomfortable during late-night work.
-
-### User Need
-The user needs a lower-glare interface for evening sessions.
-
-### Expected Benefit
-The dashboard becomes more comfortable for late work and more accessible for users who prefer dark themes.
 
 ### Trigger Conditions
 A future task touches dashboard theme settings, accessibility, late-night use, or user display preferences.
@@ -297,19 +227,19 @@ A future task touches dashboard theme settings, accessibility, late-night use, o
 ### Expected Behavior
 The dashboard respects system color preference and also allows a manual dark-mode toggle in user settings.
 
-### Current Workaround
+### Workaround
 Users rely on browser extensions or lower display brightness.
 
-### Suggested Implementation
+### Implementation Direction
 Use CSS variables for theme colors, add a toggle in user settings, and initialize from system preference.
 
-### Approval Needed
+### Approval State
 The user requested the capability, but implementation timing still needs approval unless this is the active task.
 
 ### User Communication
 I added FEAT-20250116-001 as user_formed for dashboard dark mode and will mention it when future work touches theme settings or accessibility.
 
-### Reminder Rule
+### Reminder
 Remind the user when work touches dashboard themes, settings, or accessibility.
 
 ### Metadata
@@ -337,19 +267,12 @@ This touches existing request FEAT-20250115-001: CSV export for weekly report sh
 **Logged**: 2025-01-10T14:00:00Z
 **Priority**: low
 **Status**: resolved
-**Area**: frontend
 
-### Requested Capability
-Dark mode support for the dashboard.
+### Need
+Lower-glare dashboard theme for evening sessions.
 
-### Observed Friction
+### Friction
 The user works late hours and finds the bright interface straining. Several other users have mentioned this informally.
-
-### User Need
-The user needs a lower-glare interface for evening sessions.
-
-### Expected Benefit
-The dashboard is more comfortable for late work and more accessible for users who prefer dark themes.
 
 ### Trigger Conditions
 A future task touches dashboard theme settings, accessibility, late-night use, or user display preferences.
@@ -357,19 +280,19 @@ A future task touches dashboard theme settings, accessibility, late-night use, o
 ### Expected Behavior
 The dashboard respects system color preference and also allows a manual dark-mode toggle in user settings.
 
-### Current Workaround
+### Workaround
 Users rely on browser extensions or lower display brightness.
 
-### Suggested Implementation
+### Implementation Direction
 Use CSS variables for theme colors, add a toggle in user settings, and initialize from system preference.
 
-### Approval Needed
-No further approval needed; the request has been implemented.
+### Approval State
+No further approval is needed; the request has been implemented.
 
 ### User Communication
 I marked FEAT-20250110-002 resolved after dark mode shipped with system preference detection and a manual toggle.
 
-### Reminder Rule
+### Reminder
 Do not proactively remind after resolution unless a related regression or follow-up request appears.
 
 ### Metadata
@@ -391,33 +314,7 @@ Do not proactively remind after resolution unless a related regression or follow
 ## Learning: Promoted to Skill
 
 ```markdown
-## [LRN-20250118-001] best_practice
-
-**Logged**: 2025-01-18T11:00:00Z
-**Priority**: high
-**Status**: promoted
-**Skill-Path**: skills/docker-m1-fixes
-**Area**: infra
-
-### Summary
-Docker build fails on Apple Silicon due to platform mismatch
-
-### Details
-When building Docker images on M1/M2 Macs, the build fails because
-the base image doesn't have an ARM64 variant. This is a common issue
-that affects many developers.
-
-### Suggested Action
-Add `--platform linux/amd64` to docker build command, or use
-`FROM --platform=linux/amd64` in Dockerfile.
-
-### Metadata
-- Source: error
-- Related Files: Dockerfile
-- Tags: docker, arm64, m1, apple-silicon
-- See Also: ERR-20250115-A3F, ERR-20250117-B2D
-
----
+## [LRN-20250118-001] docker_m1_platform - promoted: skills/docker-m1-fixes/SKILL.md, 2025-01-18. Note: Docker builds on Apple Silicon may need explicit linux/amd64 platform guidance.
 ```
 
 ## Extracted Skill Example

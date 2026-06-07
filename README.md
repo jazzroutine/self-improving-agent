@@ -100,7 +100,7 @@ Add a short reminder to the relevant agent instruction file, such as `AGENTS.md`
 ```markdown
 ## Self-Improvement
 
-After corrections, command failures, missing capability requests, or useful recurring discoveries, check `.learnings/` for existing matching entries before writing. Capture concise, redacted entries first; for feature requests, form the user need, observed friction, expected benefit, approval needed, and reminder rule. Use `user_formed` for user-requested capabilities and `agent_formed` for agent-spotted opportunities. Treat `.learnings/FEATURE_REQUESTS.md` as the moderation gate before creating agent-proposed skills or automations.
+After corrections, reusable or recurring command failures, missing capability requests, or useful recurring discoveries, search the relevant `.learnings/` file with 3-5 strong identifiers before writing. Capture concise, redacted entries first; for feature requests, form the user need, observed friction, expected behavior, trigger conditions, approval need, implementation direction, and reminder rule. Use `user_formed` for user-requested capabilities and `agent_formed` for agent-spotted opportunities. Treat `.learnings/FEATURE_REQUESTS.md` as the moderation gate before creating agent-proposed skills or automations.
 ```
 
 ## Claude Code / Codex Hook Example
@@ -153,14 +153,14 @@ See `references/hooks-setup.md` for detailed hook configuration and troubleshoot
 This skill gives agents a small memory system for improving their future work. It records useful experience in `.learnings/` files, avoids duplicate notes, and can create a dedicated skill when an issue becomes useful beyond a single incident.
 
 1. When a user corrects the agent, a command fails, a capability is missing, or a useful recurring pattern appears, the agent checks whether the event is worth recording.
-2. The agent searches the existing `.learnings/` files before writing, so repeated issues update the same entry instead of creating scattered duplicates.
+2. The agent searches the relevant `.learnings/` file with 3-5 strong identifiers before writing, so repeated issues update the same entry instead of creating scattered duplicates.
 3. Corrections, knowledge gaps, and reusable working habits go in `.learnings/LEARNINGS.md`.
-4. Command, tool, API, and integration failures go in `.learnings/ERRORS.md`, grouped by root cause when possible.
+4. Command, tool, API, and integration failures go in `.learnings/ERRORS.md` only when reusable, repeated, surprising, high-impact, or likely to recur and not already covered; group them by root cause when possible.
 5. Missing capabilities, repeated workaround ideas, and agent-spotted automation or skill opportunities go in `.learnings/FEATURE_REQUESTS.md`.
 6. If a recurring error needs a reusable capability, the agent creates or updates a feature request and keeps the full error entry active until that request is complete enough to take over tracking.
 7. Entries stay short and useful: what happened, what to do differently, and any safe context needed later. They should not include secrets, raw transcripts, tokens, environment variables, or long command output.
 8. When an entry is fixed, promoted, superseded, stale, or handed off, the agent compacts it to a one-line tombstone instead of preserving a bulky history log.
-9. If the same issue becomes a general rule, the agent can copy that rule into the instruction file future agents actually load, such as `AGENTS.md`, `TOOLS.md`, `SOUL.md` for OpenClaw, or a new issue-specific skill. The original `.learnings/` entry remains as the source note, so the reason for the rule is still traceable.
+9. If the same issue becomes a general rule, the agent can copy that rule into the instruction file future agents actually load, such as `AGENTS.md`, `TOOLS.md`, `SOUL.md` for OpenClaw, or a new issue-specific skill. The `.learnings/` entry then stays active only while useful, or shrinks to a tombstone that keeps the promoted target traceable.
 
 ## Entry Types
 
@@ -169,7 +169,7 @@ This skill gives agents a small memory system for improving their future work. I
 | File | Use For | Key Rule |
 |------|---------|----------|
 | `.learnings/LEARNINGS.md` | Corrections, knowledge gaps, insights, and recurring best practices | Search for near-duplicates before adding; promote or supersede active lessons into tombstones when the durable rule lives elsewhere. |
-| `.learnings/ERRORS.md` | Command, tool, API, integration, and operation failures | Maintain one entry per recurring root cause; escalate repeated patterns; tombstone fixed, promoted, stale, superseded, or feature-handed-off errors. |
+| `.learnings/ERRORS.md` | Reusable, repeated, surprising, high-impact, or likely-recurring command/tool/API/integration failures | Maintain one entry per root cause; escalate repeated patterns; tombstone fixed, promoted, stale, superseded, or feature-handed-off errors. |
 | `.learnings/FEATURE_REQUESTS.md` | Missing capabilities, reusable limitations, repeated workaround automation ideas, and agent-spotted skill opportunities | Act as the moderation gate before new skills or automations; search active entries and tombstones before proposing duplicate capability work. |
 
 Error entries use the shape: `Representative Errors`, `Context Examples`, `Lesson`, `Issue`, `Suggested Fix`, `Avoidance Rule`, and recurrence metadata such as `Pattern-Key`, `First-Seen`, `Last-Seen`, and `Recurrence-Count`.
@@ -182,7 +182,7 @@ Use this flow for recurring errors that need tooling, automation, or a new skill
 
 1. Keep one canonical `ERR-*` entry for the recurring root cause.
 2. Create or update one matching `FEAT-*` entry instead of proposing a fresh capability each time.
-3. Make the feature request actionable by filling `Need`, `Behavior`, `Triggers`, `Implementation`, `Status`, and `Related Errors`.
+3. Make the feature request actionable by filling `Need`, `Expected Behavior`, `Trigger Conditions`, `Implementation Direction`, `Status`, and `Related Errors`.
 4. Only then compact the source error to `moved_to_feature`, pointing at the `FEAT-*` ID.
 
 Feature-request tombstones matter for duplicate prevention. If a request was resolved by an existing skill, tool, script, workflow, commit, or guidance file, the tombstone note must name that target clearly enough that a later agent can find it before proposing or creating the same capability again.
@@ -191,7 +191,7 @@ Feature-request tombstones matter for duplicate prevention. If a request was res
 
 The skill separates small local notes from durable guidance. `.learnings/` keeps the source record: corrections, errors, feature requests, and short lessons. When a lesson becomes generally useful, the agent can move the distilled rule into the instruction file future agents already load, such as `AGENTS.md`, `TOOLS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, `SOUL.md`, or another engine-specific guidance file.
 
-Use the target that matches the behavior: agent workflow belongs in agent guidance, local command and integration gotchas belong in tool guidance, communication rules belong in behavior guidance, and project conventions belong in the project instruction file. The `.learnings/` entry remains as the traceable source note and should record the promoted target.
+Use the target that matches the behavior: agent workflow belongs in agent guidance, local command and integration gotchas belong in tool guidance, communication rules belong in behavior guidance, and project conventions belong in the project instruction file. The `.learnings/` entry remains active only while useful; after promotion or supersession, it should shrink to a tombstone that records the promoted target.
 
 New reusable skills follow the feature-request loop. The agent uses `.learnings/FEATURE_REQUESTS.md` when a missing capability, recurring limitation, repeated workaround, or concrete agent-spotted opportunity deserves future attention. Before adding a request, it searches active requests and tombstones by capability, affected tool, problem area, trigger condition, related error or learning ID, and prior implementation target, then updates a matching request instead of creating a duplicate.
 
@@ -205,9 +205,9 @@ Feature requests use these statuses:
 - `rejected` - intentionally not planned; include the reason.
 - `superseded` - replaced by another request; link the replacement.
 
-A ready request includes the requested capability, observed friction or user need, expected benefit, trigger conditions, expected behavior, current workaround, suggested implementation, approval needed, user communication, reminder rule, and related errors or learnings when applicable.
+A ready request includes the capability name, need, friction, expected behavior, trigger conditions, current workaround, implementation direction, approval state, user communication, reminder rule, and related errors or learnings when applicable.
 
-`agent_formed` is the moderation state for agent-spotted ideas. It means the agent has made the opportunity clear enough for user review: what friction was observed, what capability is proposed, why it would help, and what approval is needed. The agent tells the user when it creates or materially updates a request, when the request moves to `in_progress`, `rejected`, or `resolved`, and when a later task matches an active request's reminder rule.
+`agent_formed` is the moderation state for agent-spotted ideas. It means the agent has made the opportunity clear enough for user review: what friction was observed, what capability is proposed, why it would help, and what approval is needed. The agent tells the user only when a feature-request change affects action: status becomes `user_formed`, `agent_formed`, `in_progress`, `resolved`, or `rejected`, or scope, trigger conditions, approval need, implementation target, or resolution changes. It can also remind when a later task matches an active request's reminder rule.
 
 The agent will not create a new skill from an agent-spotted opportunity until the user approves the matching feature request. After user approval, the request moves directly to `in_progress` status while the implementation is underway. If a reusable skill is the right implementation path, the agent previews and extracts it with `scripts/extract-skill.sh` from `assets/SKILL-TEMPLATE.md`:
 

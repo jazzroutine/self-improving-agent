@@ -12,11 +12,11 @@ Persist only reusable learning. Prefer short, redacted, deduplicated entries ove
 
 - Never log secrets, tokens, keys, credentials, env vars, sensitive personal data, raw transcripts, or long command output.
 - Never overwrite existing `.learnings/` files. Create only missing files.
-- Search before every write. Update matching entries instead of duplicating them.
+- Search before every write with 3-5 strong identifiers. Update matching entries instead of duplicating them.
 - Keep `.learnings/ERRORS.md` an index of patterns, not an incident dump.
 - Feature requests are moderated capability-growth records, not permission to create tools/skills.
 - Agent-spotted skills/tools require user approval before implementation.
-- Tell the user briefly when a feature request becomes `user_formed`, `agent_formed`, `in_progress`, materially updated, `resolved`, or `rejected`.
+- Notify the user only for feature-request changes that affect action: status becomes `user_formed`, `agent_formed`, `in_progress`, `resolved`, or `rejected`, or scope, trigger conditions, approval need, implementation target, or resolution changes.
 
 ## Initialize
 
@@ -31,7 +31,7 @@ If assets are unavailable, create minimal files with these headings: `# Learning
 ## Trigger Router
 
 - User correction, outdated knowledge, better recurring approach -> `.learnings/LEARNINGS.md`.
-- Command failure, exception, timeout, unusable tool/API output -> `.learnings/ERRORS.md`.
+- Command failure, exception, timeout, unusable tool/API output -> `.learnings/ERRORS.md` only when reusable, repeated, surprising, high-impact, or likely to recur and not already covered.
 - Missing reusable capability, repeated workaround, agent-spotted workflow/tool/skill opportunity -> `.learnings/FEATURE_REQUESTS.md`.
 - Pattern appears broad, repeated, or already proven -> promotion review.
 
@@ -42,7 +42,7 @@ Learning categories: `correction`, `insight`, `knowledge_gap`, `best_practice`.
 Before writing:
 
 1. Read the relevant `.learnings/` file, including `Active Rules From Past Errors` when present.
-2. Search by title/capability, exact error text, command/tool/API, affected path/integration, trigger condition, `Pattern-Key`, and related IDs.
+2. Search with 3-5 strongest identifiers: title/capability, exact error text, command/tool/API, affected path/integration, trigger condition, `Pattern-Key`, or related IDs.
 3. Classify the candidate as `same_pattern`, `related_pattern`, or `new_pattern`.
 4. For `same_pattern`, update the canonical entry.
 5. For `related_pattern`, keep separate entries and add `See Also` links when useful.
@@ -111,7 +111,7 @@ Error retention:
 - Keep `ERRORS.md` as active/recent error memory, not history.
 - Keep full entries only while they help avoid, diagnose, or escalate a live/recent pattern.
 - After fix, promotion, supersession, stale cleanup, or feature-request handoff, shrink the entry to a one-line tombstone.
-- Tombstone format: `## [ERR-ID] short_title - fixed|promoted|moved_to_feature|superseded|stale: target, YYYY-MM-DD. Note: reason.`
+- Use the `Resolution` tombstone format.
 - Do not create archive files unless the user explicitly asks.
 
 ## Feature Request Workflow
@@ -134,7 +134,7 @@ Formation rules:
 - Use `agent_formed` only when observed friction, expected benefit, trigger conditions, expected behavior, workaround, implementation direction, approval need, user communication, and reminder rule are clear.
 - If vague, ask one short clarification question or keep `draft`.
 - If matching request exists, update it with recurrence, context, related IDs, or stronger reminder rules.
-- When created from recurring errors, link `Related Errors` and let the feature request become the canonical tracker only after it has `Need`, `Behavior`, `Triggers`, `Implementation`, `Status`, and `Related Errors`.
+- When created from recurring errors, link `Related Errors` and let the feature request become the canonical tracker only after it has `Need`, `Expected Behavior`, `Trigger Conditions`, `Implementation Direction`, `Status`, and `Related Errors`.
 - After the feature request is canonical, tombstone the source error as `moved_to_feature` and point to the `FEAT-*` ID.
 
 Reminder rules:
@@ -149,7 +149,7 @@ Feature request retention:
 - Keep full entries for `draft`, `user_formed`, `agent_formed`, and `in_progress` while they are actionable or reminder-relevant.
 - Keep `resolved`, `rejected`, and `superseded` entries full only while their details are still useful.
 - When inactive entries no longer need full detail, shrink them to a one-line tombstone.
-- Tombstone format: `## [FEAT-ID] capability_name - resolved|rejected|superseded: outcome_or_target, YYYY-MM-DD. Note: reason.`
+- Use the `Resolution` tombstone format.
 - For resolved skills, tools, scripts, or workflows, the tombstone note must name the existing skill path or created files clearly enough to prevent duplicate proposals or duplicate creation later.
 - Search active entries and tombstones before proposing, creating, or approving a similar capability.
 
@@ -212,8 +212,7 @@ Promotion workflow:
 1. Distill to a concise rule/procedure.
 2. Search target and existing skills for overlap.
 3. Add only the durable guidance.
-4. For learnings, replace the source entry with a one-line tombstone naming status, target, date, and reason.
-5. For errors, replace the source entry with a one-line tombstone naming status, target, date, and reason.
+4. For learnings and errors, apply the `Resolution` tombstone rules.
 
 Learning retention:
 
@@ -227,4 +226,4 @@ Recurring error patterns follow Error Deduplication escalation rules.
 
 ## Periodic Review
 
-Review `.learnings/` before major tasks, after substantial work, when near prior mistakes, and during maintenance. Resolve fixed entries, merge duplicates, link related items, promote proven rules, and escalate recurring issues.
+Review `.learnings/` before major tasks, after substantial work, when near prior mistakes, and during maintenance. Major means multi-step, risky, long-running, repeated-failure-adjacent, or touching agent/workspace behavior. Resolve fixed entries, merge duplicates, link related items, promote proven rules, and escalate recurring issues.
